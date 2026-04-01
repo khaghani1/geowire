@@ -7,7 +7,8 @@
   "nav": {
     "dashboard": "Dashboard",
     "analysis": "Analysis",
-    "calculator": "Calculator",
+    "methodology": "Methodology",
+    "pricing": "Pricing",
     "signIn": "Sign In",
     "signOut": "Sign Out",
     "userDashboard": "Dashboard"
@@ -27,6 +28,15 @@
   },
 
   "home": {
+    "hero": {
+      "headline": "Real-Time Recession Intelligence",
+      "subheadline": "GeoWire tracks how geopolitical conflict cascades into economic risk — with live data from the Federal Reserve, calibrated academic models, and interactive supply chain analysis."
+    },
+    "trust": {
+      "dataSources": "Powered by Federal Reserve Economic Data (FRED) · 13 live indicators · Updated hourly",
+      "models": "Models: NY Fed Probit · Sahm Rule · Hamilton NOPI · Credit Spreads · Philadelphia Fed Leading Index",
+      "methodologyLink": "See full methodology →"
+    },
     "latestIntelligence": "Latest Intelligence",
     "recessionFactors": "Recession Factors",
     "kpi": {
@@ -409,5 +419,16 @@
   "loading": {
     "dashboard": "Loading dashboard…",
     "analysis": "Loading analysis…"
+  },
+
+  "ticker": {
+    "ariaLabel": "Live market and risk data ticker"
+  },
+
+  "whatChanged": {
+    "title": "What Changed Today",
+    "badge": "Last 24h",
+    "noChanges": "No significant changes detected in the last 24 hours.",
+    "latestLabel": "Latest"
   }
 }

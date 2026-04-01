@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { ARTICLES } from '@/lib/data/articles';
 
-const BASE_URL = 'https://geowire.org';
+const BASE_URL = 'https://www.geowire.org';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [

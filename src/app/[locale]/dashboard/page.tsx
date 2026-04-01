@@ -18,6 +18,7 @@ import { RecessionGaugeV2 } from '@/components/dashboard/RecessionGaugeV2';
 import { OilCascadeSankey } from '@/components/dashboard/OilCascadeSankey';
 import { HormuzMap } from '@/components/dashboard/HormuzMap';
 import { ChartErrorBoundary } from '@/components/dashboard/ChartErrorBoundary';
+import { WhatChanged } from '@/components/dashboard/WhatChanged';
 
 // ─── Quick Action IDs (labels & descriptions come from en.json) ────────────────
 
@@ -316,6 +317,11 @@ export default function DashboardPage() {
                 isLoading={isScoreLoading}
                 tier={tier}
               />
+            </GlassCard>
+
+            {/* What Changed Today */}
+            <GlassCard>
+              <WhatChanged isLoading={isScoreLoading} />
             </GlassCard>
 
             {/* Alert feed */}

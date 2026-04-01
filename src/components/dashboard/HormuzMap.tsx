@@ -7,10 +7,11 @@
  * Tiles: CARTO Dark Matter
  *
  * Features:
- *  - Red polygon over the Hormuz strait
- *  - Shipping route polylines:
- *      Normal    → direct through Hormuz (green solid)
- *      Disrupted → diversion via Cape of Good Hope (red dashed)
+ *  - Pulsing red polygon over the Hormuz strait
+ *  - Animated shipping routes using leaflet-ant-path:
+ *      Normal    → flowing green dashes through Hormuz
+ *      Disrupted → flowing red dashes via Cape of Good Hope
+ *      When disrupted, green routes FREEZE and red routes FLOW
  *  - Producer markers with popups (output + share)
  *  - Normal ↔ Disrupted toggle
  *  - Show / Hide outer toggle (hidden by default to avoid layout cost)
@@ -22,25 +23,23 @@
  * executes on the server where `window` doesn't exist.
  */
 
-// ⚠️  Must be a top-level import — require('leaflet/dist/leaflet.css')
-//     inside a function body is silently ignored by most bundlers.
+// ⚠️  Must be a top-level import
 import 'leaflet/dist/leaflet.css';
 
 import dynamic from 'next/dynamic';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import L from 'leaflet';
 import {
   MapContainer,
   TileLayer,
   Polygon,
-  Polyline,
   Marker,
   Popup,
+  useMap,
 } from 'react-leaflet';
 
 // ─── Leaflet default-icon fix (webpack asset URL issue) ────────────────────────
-// Must run once after Leaflet is imported.
 (function fixLeafletIcons() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -72,14 +71,108 @@ const PRODUCERS = [
   { name: 'Kuwait',       latlng: [29.5, 47.5] as [number, number], output: '2.7 mb/d', share: '~7%'  },
 ];
 
-const NORMAL_ROUTE: [number, number][] = [
+const NORMAL_ROUTE: L.LatLngExpression[] = [
   [24.0, 45.0], [26.0, 56.5], [22.0, 65.0], [10.0, 75.0], [1.0, 104.0], [25.0, 122.0],
 ];
 
-const DISRUPTED_ROUTE: [number, number][] = [
+const DISRUPTED_ROUTE: L.LatLngExpression[] = [
   [24.0, 45.0], [13.0, 43.0], [-5.0, 40.0], [-34.0, 20.0],
   [-20.0, 45.0], [-5.0, 55.0], [5.0, 65.0], [1.0, 104.0], [25.0, 122.0],
 ];
+
+// ─── AntPath wrapper (dynamic import to avoid SSR) ────────────────────────────
+
+/**
+ * This component adds leaflet-ant-path polylines directly to the map.
+ * It dynamically imports the library (needs `window`) with a try/catch fallback.
+ */
+function AntPathLayer({ disrupted }: { disrupted: boolean }) {
+  const map = useMap();
+  const normalRef = useRef<L.Polyline | null>(null);
+  const disruptedRef = useRef<L.Polyline | null>(null);
+  const fallbackNormalRef = useRef<L.Polyline | null>(null);
+  const fallbackDisruptedRef = useRef<L.Polyline | null>(null);
+  const [useAntPath, setUseAntPath] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      try {
+        // Dynamic import — leaflet-ant-path needs `window`
+        const { AntPath } = await import('leaflet-ant-path');
+
+        if (cancelled) return;
+
+        // Clean up any existing layers
+        if (normalRef.current) map.removeLayer(normalRef.current);
+        if (disruptedRef.current) map.removeLayer(disruptedRef.current);
+        if (fallbackNormalRef.current) { map.removeLayer(fallbackNormalRef.current); fallbackNormalRef.current = null; }
+        if (fallbackDisruptedRef.current) { map.removeLayer(fallbackDisruptedRef.current); fallbackDisruptedRef.current = null; }
+
+        // Create normal route (green flowing dashes)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const normalPath = new (AntPath as any)(NORMAL_ROUTE, {
+          delay: 400,
+          dashArray: [10, 20],
+          weight: 2.5,
+          color: '#00C853',
+          pulseColor: '#00E676',
+          paused: disrupted, // FREEZE when disrupted
+          opacity: disrupted ? 0.25 : 0.8,
+        });
+
+        // Create disrupted route (red flowing dashes via Cape)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const disruptedPath = new (AntPath as any)(DISRUPTED_ROUTE, {
+          delay: 600,
+          dashArray: [10, 20],
+          weight: 2.5,
+          color: '#FF1744',
+          pulseColor: '#FF5252',
+          paused: !disrupted, // FLOW only when disrupted
+          opacity: disrupted ? 0.8 : 0,
+        });
+
+        normalPath.addTo(map);
+        disruptedPath.addTo(map);
+
+        normalRef.current = normalPath;
+        disruptedRef.current = disruptedPath;
+      } catch {
+        // Fallback to static polylines if ant-path fails
+        if (cancelled) return;
+        setUseAntPath(false);
+
+        // Clean up ant paths if they exist
+        if (normalRef.current) { map.removeLayer(normalRef.current); normalRef.current = null; }
+        if (disruptedRef.current) { map.removeLayer(disruptedRef.current); disruptedRef.current = null; }
+
+        // Static fallback
+        if (fallbackNormalRef.current) map.removeLayer(fallbackNormalRef.current);
+        if (fallbackDisruptedRef.current) map.removeLayer(fallbackDisruptedRef.current);
+
+        if (!disrupted) {
+          const line = L.polyline(NORMAL_ROUTE, { color: '#00C853', weight: 2, opacity: 0.75 }).addTo(map);
+          fallbackNormalRef.current = line;
+        } else {
+          const line = L.polyline(DISRUPTED_ROUTE, { color: '#FF1744', weight: 2, opacity: 0.75, dashArray: '8 5' }).addTo(map);
+          fallbackDisruptedRef.current = line;
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+      if (normalRef.current) { map.removeLayer(normalRef.current); normalRef.current = null; }
+      if (disruptedRef.current) { map.removeLayer(disruptedRef.current); disruptedRef.current = null; }
+      if (fallbackNormalRef.current) { map.removeLayer(fallbackNormalRef.current); fallbackNormalRef.current = null; }
+      if (fallbackDisruptedRef.current) { map.removeLayer(fallbackDisruptedRef.current); fallbackDisruptedRef.current = null; }
+    };
+  }, [map, disrupted, useAntPath]);
+
+  return null;
+}
 
 // ─── Inner map (always client-side — this file is ssr:false) ──────────────────
 
@@ -98,7 +191,7 @@ function HormuzMapInner({ disrupted }: { disrupted: boolean }) {
       >
         <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
 
-        {/* Hormuz strait polygon */}
+        {/* Hormuz strait polygon — pulsing animation via CSS */}
         <Polygon
           positions={HORMUZ_POLYGON}
           pathOptions={{
@@ -107,15 +200,12 @@ function HormuzMapInner({ disrupted }: { disrupted: boolean }) {
             fillOpacity: disrupted ? 0.35 : 0.18,
             weight: disrupted ? 2 : 1.5,
             dashArray: disrupted ? '6 4' : undefined,
+            className: 'hormuz-polygon-pulse',
           }}
         />
 
-        {/* Shipping route */}
-        {!disrupted ? (
-          <Polyline positions={NORMAL_ROUTE} pathOptions={{ color: '#00C853', weight: 2, opacity: 0.75 }} />
-        ) : (
-          <Polyline positions={DISRUPTED_ROUTE} pathOptions={{ color: '#FF1744', weight: 2, opacity: 0.75, dashArray: '8 5' }} />
-        )}
+        {/* Animated ant-path routes */}
+        <AntPathLayer disrupted={disrupted} />
 
         {/* Producer markers */}
         {PRODUCERS.map((p) => (
@@ -130,6 +220,17 @@ function HormuzMapInner({ disrupted }: { disrupted: boolean }) {
           </Marker>
         ))}
       </MapContainer>
+
+      {/* Pulsing animation for the Hormuz polygon */}
+      <style>{`
+        @keyframes hormuzPulse {
+          0%, 100% { fill-opacity: 0.18; }
+          50% { fill-opacity: 0.38; }
+        }
+        .hormuz-polygon-pulse {
+          animation: hormuzPulse 2s ease-in-out infinite;
+        }
+      `}</style>
     </div>
   );
 }
@@ -192,8 +293,8 @@ function HormuzMapWithToggle() {
       {/* Legend — only when visible */}
       {visible && (
         <div style={{ display: 'flex', gap: '14px', marginTop: '10px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-          <MapLegendItem color="#00C853" label={t('legendNormal')} />
-          <MapLegendItem color="#FF1744" dashed label={t('legendDisrupted')} />
+          <MapLegendItem color="#00C853" label={t('legendNormal')} animated />
+          <MapLegendItem color="#FF1744" dashed label={t('legendDisrupted')} animated />
           <MapLegendItem color="#FF1744" filled label={t('legendBlocked')} />
         </div>
       )}
@@ -201,12 +302,34 @@ function HormuzMapWithToggle() {
   );
 }
 
-function MapLegendItem({ color, label, dashed, filled }: { color: string; label: string; dashed?: boolean; filled?: boolean }) {
+function MapLegendItem({ color, label, dashed, filled, animated }: { color: string; label: string; dashed?: boolean; filled?: boolean; animated?: boolean }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
       {filled
         ? <div style={{ width: 10, height: 10, borderRadius: 2, background: color, opacity: 0.6 }} />
-        : <div style={{ width: 18, height: 2, background: dashed ? 'transparent' : color, borderTop: dashed ? `2px dashed ${color}` : 'none', opacity: 0.8 }} />
+        : (
+          <div style={{
+            width: 18,
+            height: 2,
+            background: dashed ? 'transparent' : color,
+            borderTop: dashed ? `2px dashed ${color}` : 'none',
+            opacity: 0.8,
+            position: 'relative',
+          }}>
+            {animated && (
+              <span style={{
+                position: 'absolute',
+                right: -4,
+                top: -3,
+                width: 4,
+                height: 4,
+                borderRadius: '50%',
+                background: color,
+                boxShadow: `0 0 4px ${color}`,
+              }} />
+            )}
+          </div>
+        )
       }
       <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.45)' }}>{label}</span>
     </div>
