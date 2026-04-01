@@ -263,5 +263,37 @@
     "popupOutput": "Output: {output}",
     "popupShare": "Gulf share: {share}% of global supply",
     "loadingTiles": "Loading map…"
+  },
+
+  "analysis": {
+    "pageTitle": "Analysis",
+    "pageSubtitle": "Deep-dive intelligence on recession risk, energy markets, and supply-chain disruptions.",
+    "filterAll": "All",
+    "filterRecessionRisk": "Recession Risk",
+    "filterEnergy": "Energy",
+    "filterSupplyChain": "Supply Chain",
+    "readMore": "Read analysis →",
+    "readingTime": "{minutes} min read",
+    "publishedOn": "Published {date}",
+    "byAuthor": "By {author}",
+    "tableOfContents": "Table of Contents",
+    "shareArticle": "Share",
+    "copyLink": "Copy link",
+    "linkCopied": "Link copied!",
+    "relatedArticles": "Related Analysis",
+    "backToAnalysis": "← Back to Analysis",
+    "severity": {
+      "low": "Low",
+      "medium": "Medium",
+      "elevated": "Elevated",
+      "high": "High",
+      "critical": "Critical"
+    },
+    "topics": {
+      "recession-risk": "Recession Risk",
+      "energy": "Energy",
+      "supply-chain": "Supply Chain"
+    },
+    "noArticles": "No articles match the selected filter."
   }
 }
