@@ -26,7 +26,7 @@ export function AlertBanner() {
       <span>
         {t.rich('message', {
           probability: 62,
-          strong: (chunks) => (
+          highlight: (chunks) => (
             <strong style={{ color: '#FF1744' }}>{chunks}</strong>
           ),
         })}

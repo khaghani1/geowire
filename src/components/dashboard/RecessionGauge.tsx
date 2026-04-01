@@ -78,10 +78,9 @@ export function RecessionGauge({
 
   // Signal label — derived from probability, keys match en.json gauge.signals
   function getSignalLabel(prob: number): string {
-    if (prob < 20) return t('signals.lowRisk');
-    if (prob < 40) return t('signals.moderate');
-    if (prob < 60) return t('signals.elevated');
-    if (prob < 80) return t('signals.high');
+    if (prob < 25) return t('signals.lowRisk');
+    if (prob < 50) return t('signals.moderate');
+    if (prob < 75) return t('signals.elevated');
     return t('signals.severe');
   }
 

@@ -25,12 +25,19 @@ export interface RecessionGaugeV2Props {
   isLoading?: boolean;
 }
 
-// ─── Color helper ──────────────────────────────────────────────────────────────
+// ─── Color + label helpers ─────────────────────────────────────────────────────
 function gaugeColor(prob: number): string {
-  if (prob < 30) return '#00C853';
-  if (prob < 55) return '#FFD600';
+  if (prob < 25) return '#00C853';
+  if (prob < 50) return '#FFD600';
   if (prob < 75) return '#FF6D00';
   return '#FF1744';
+}
+
+function getSignalLabel(prob: number): string {
+  if (prob < 25) return 'LOW RISK';
+  if (prob < 50) return 'MODERATE';
+  if (prob < 75) return 'ELEVATED';
+  return 'SEVERE';
 }
 
 // ─── Inner chart (always client-side) ─────────────────────────────────────────
@@ -112,7 +119,7 @@ function RecessionGaugeV2Inner({ probability, signal, confidence, isLoading }: R
         color: 'rgba(255,255,255,0.45)',
       }}>
         <span style={{ color, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-          {signal}
+          {getSignalLabel(probability)}
         </span>
         <span>{confidence}</span>
       </div>

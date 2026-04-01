@@ -112,7 +112,7 @@ function OilCascadeSankeyInner() {
         nodeGap: 16,
         nodeWidth: 14,
         left: '2%',
-        right: '2%',
+        right: '18%',
         top: '6%',
         bottom: '6%',
         data: NODES.map((n) => ({
