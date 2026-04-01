@@ -2,6 +2,9 @@
 
 import type { ModelResult } from '@/lib/scoring/engine';
 import { Skeleton } from '@/components/ui/Skeleton';
+import { PaywallOverlay } from '@/components/auth/PaywallOverlay';
+import type { Tier } from '@/lib/auth/permissions';
+import { canViewModel } from '@/lib/auth/permissions';
 
 // ─── Color helpers ────────────────────────────────────────────────────────────
 
@@ -157,9 +160,11 @@ export function ModelCard({ model }: ModelCardProps) {
 interface ModelBreakdownProps {
   models: ModelResult[];
   isLoading: boolean;
+  /** User's current tier — controls PaywallOverlay on models 3-6 */
+  tier?: Tier;
 }
 
-export function ModelBreakdown({ models, isLoading }: ModelBreakdownProps) {
+export function ModelBreakdown({ models, isLoading, tier = 'free' }: ModelBreakdownProps) {
   return (
     <div style={{ padding: '16px' }}>
       <div className="gw-panel-label" style={{ marginBottom: '10px' }}>
@@ -173,9 +178,18 @@ export function ModelBreakdown({ models, isLoading }: ModelBreakdownProps) {
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          {models.map((model) => (
-            <ModelCard key={model.model} model={model} />
-          ))}
+          {models.map((model, index) => {
+            const locked = !canViewModel(tier, index);
+            return (
+              <div
+                key={model.model}
+                style={{ position: 'relative', borderRadius: '8px' }}
+              >
+                <ModelCard model={model} />
+                {locked && <PaywallOverlay />}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { NavbarUserMenu } from './NavbarUserMenu';
 
 export function Navbar() {
   return (
@@ -31,6 +32,9 @@ export function Navbar() {
         <span className="gw-lang-badge">
           🇺🇸 English
         </span>
+
+        {/* Auth state — client component */}
+        <NavbarUserMenu />
       </div>
     </nav>
   );

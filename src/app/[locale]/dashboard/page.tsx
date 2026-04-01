@@ -10,6 +10,8 @@ import { AlertFeed } from '@/components/dashboard/AlertFeed';
 import { IndicatorTable } from '@/components/dashboard/IndicatorTable';
 import { useRecessionScore } from '@/hooks/useRecessionScore';
 import { useFredSeries, buildSeriesMap } from '@/hooks/useFredSeries';
+import { useProfile } from '@/hooks/useProfile';
+import { getTierPermissions, tierLabel } from '@/lib/auth/permissions';
 
 // ─── Quick Actions ─────────────────────────────────────────────────────────────
 
@@ -146,6 +148,7 @@ function QuickActionButton({
 export default function DashboardPage() {
   const scoreQuery = useRecessionScore();
   const seriesResults = useFredSeries();
+  const { profile, loading: profileLoading } = useProfile();
 
   const score = scoreQuery.data;
   const isScoreLoading = scoreQuery.isLoading;
@@ -153,6 +156,11 @@ export default function DashboardPage() {
   // Build a keyed map once all/some series are loaded
   const seriesMap = buildSeriesMap(seriesResults);
   const isSeriesLoading = seriesResults.some((r) => r.isLoading);
+
+  // Tier-based state
+  const tier = profile?.tier ?? 'free';
+  const tierPerms = getTierPermissions(tier);
+  const callsRemaining = tierPerms.apiCallsPerDay - (profile?.api_calls_today ?? 0);
 
   // Gauge props — fall back to safe defaults while loading
   const probability = score?.probability ?? 0;
@@ -174,24 +182,66 @@ export default function DashboardPage() {
       <main style={{ flex: 1, padding: '28px 24px', maxWidth: '1360px', margin: '0 auto', width: '100%' }}>
 
         {/* Page header */}
-        <div style={{ marginBottom: '20px' }}>
-          <h1 style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: '22px',
-            fontWeight: 700,
-            color: 'var(--text-primary)',
-            letterSpacing: '-0.02em',
-            marginBottom: '4px',
-          }}>
-            Recession Intelligence Dashboard
-          </h1>
-          <p style={{
-            fontSize: '13px',
-            color: 'var(--text-secondary)',
-            fontFamily: 'var(--font-body)',
-          }}>
-            Live composite score — model breakdown, FRED indicators, and alerts in one view.
-          </p>
+        <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+          <div>
+            <h1 style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: '22px',
+              fontWeight: 700,
+              color: 'var(--text-primary)',
+              letterSpacing: '-0.02em',
+              marginBottom: '4px',
+            }}>
+              Recession Intelligence Dashboard
+            </h1>
+            <p style={{
+              fontSize: '13px',
+              color: 'var(--text-secondary)',
+              fontFamily: 'var(--font-body)',
+            }}>
+              Live composite score — model breakdown, FRED indicators, and alerts in one view.
+            </p>
+          </div>
+
+          {/* Tier badge — shows for free users, hidden while profile loads */}
+          {!profileLoading && tier === 'free' && (
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '6px 12px',
+              borderRadius: '8px',
+              background: 'rgba(255,214,0,0.08)',
+              border: '1px solid rgba(255,214,0,0.25)',
+              flexShrink: 0,
+            }}>
+              <span style={{ fontSize: '12px', color: 'var(--amber)', fontFamily: 'var(--font-body)', fontWeight: 600 }}>
+                {tierLabel(tier)}
+              </span>
+              <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontFamily: 'var(--font-data)' }}>
+                {Math.max(0, callsRemaining)} API calls remaining today
+              </span>
+              <a href="#" style={{ fontSize: '11px', color: 'var(--accent)', fontFamily: 'var(--font-body)', fontWeight: 600, textDecoration: 'none' }}>
+                Upgrade →
+              </a>
+            </div>
+          )}
+          {!profileLoading && (tier === 'pro' || tier === 'analyst') && (
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '5px 10px',
+              borderRadius: '6px',
+              background: 'rgba(41,121,255,0.1)',
+              border: '1px solid rgba(41,121,255,0.25)',
+              flexShrink: 0,
+            }}>
+              <span style={{ fontSize: '11px', color: 'var(--accent)', fontFamily: 'var(--font-data)', fontWeight: 700 }}>
+                ✦ {tierLabel(tier)}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Divergence warning (only shown when triggered) */}
@@ -244,6 +294,7 @@ export default function DashboardPage() {
               <ModelBreakdown
                 models={score?.models ?? []}
                 isLoading={isScoreLoading}
+                tier={tier}
               />
             </GlassCard>
 
