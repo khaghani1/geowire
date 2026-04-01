@@ -11,8 +11,8 @@ import { TrustBar } from '@/components/home/TrustBar';
 import { SparklineCards } from '@/components/dashboard/SparklineCards';
 import { GlobeHero } from '@/components/homepage/GlobeHero';
 import { ScenarioCards } from '@/components/homepage/ScenarioCards';
-import { HormuzMapHomepage } from '@/components/dashboard/HormuzMap';
-import { WhatChanged } from '@/components/dashboard/WhatChanged';
+import { HomepageHormuzWrapper } from '@/components/homepage/HomepageHormuzWrapper';
+import { HomepageWhatChangedWrapper } from '@/components/homepage/HomepageWhatChangedWrapper';
 import { ChartErrorBoundary } from '@/components/dashboard/ChartErrorBoundary';
 
 // ── Static data keys (content lives in en.json) ──────────────────────────
@@ -142,7 +142,7 @@ export default function HomePage() {
             {t('hormuzSection.subheading')}
           </p>
           <ChartErrorBoundary label="Hormuz Map">
-            <HormuzMapHomepage />
+            <HomepageHormuzWrapper />
           </ChartErrorBoundary>
         </section>
 
@@ -179,7 +179,7 @@ export default function HomePage() {
             {t('whatChangedSection.heading')}
           </h2>
           <GlassCard style={{ maxWidth: '720px', margin: '0 auto' }}>
-            <WhatChanged />
+            <HomepageWhatChangedWrapper />
           </GlassCard>
         </section>
 
