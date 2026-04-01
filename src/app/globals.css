@@ -144,6 +144,50 @@ h1, h2, h3, h4, h5, h6 {
 }
 .gw-footer-link:hover { color: var(--text-primary); }
 
+/* ── Skeleton / Shimmer ───────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+
+.gw-skeleton {
+  display: block;
+  background: linear-gradient(
+    90deg,
+    var(--bg-tertiary) 25%,
+    rgba(255,255,255,0.06) 50%,
+    var(--bg-tertiary) 75%
+  );
+  background-size: 400px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+/* ── Dashboard Utilities ──────────────────────────────────────────── */
+.gw-panel-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.gw-flash-green { animation: flashGreen 0.6s ease; }
+.gw-flash-red   { animation: flashRed   0.6s ease; }
+
+@keyframes flashGreen {
+  0%   { color: var(--green); }
+  100% { color: inherit; }
+}
+@keyframes flashRed {
+  0%   { color: var(--red); }
+  100% { color: inherit; }
+}
+
+/* details/summary disclosure triangle reset */
+details > summary { list-style: none; cursor: pointer; }
+details > summary::-webkit-details-marker { display: none; }
+
 /* ── Scrollbar ────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-secondary); }
