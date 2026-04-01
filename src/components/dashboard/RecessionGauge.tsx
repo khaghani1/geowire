@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useTranslations, useFormatter } from 'next-intl';
 import { Skeleton } from '@/components/ui/Skeleton';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -54,22 +55,6 @@ function signalColor(prob: number): string {
   return '#FF1744';                  // red
 }
 
-function signalLabel(prob: number): string {
-  if (prob < 20) return 'LOW RISK';
-  if (prob < 40) return 'MODERATE';
-  if (prob < 60) return 'ELEVATED';
-  if (prob < 80) return 'HIGH';
-  return 'SEVERE';
-}
-
-function formatTime(iso: string): string {
-  try {
-    return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  } catch {
-    return '—';
-  }
-}
-
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function RecessionGauge({
@@ -80,13 +65,34 @@ export function RecessionGauge({
   dataSource,
   isLoading = false,
 }: RecessionGaugeProps) {
+  const t = useTranslations('gauge');
+  const format = useFormatter();
+
   // Animate from 0 → actual value on mount / value change
   const [displayProb, setDisplayProb] = useState(0);
 
   useEffect(() => {
-    const t = setTimeout(() => setDisplayProb(probability), 80);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setDisplayProb(probability), 80);
+    return () => clearTimeout(timer);
   }, [probability]);
+
+  // Signal label — derived from probability, keys match en.json gauge.signals
+  function getSignalLabel(prob: number): string {
+    if (prob < 20) return t('signals.lowRisk');
+    if (prob < 40) return t('signals.moderate');
+    if (prob < 60) return t('signals.elevated');
+    if (prob < 80) return t('signals.high');
+    return t('signals.severe');
+  }
+
+  // Locale-aware time formatting via next-intl
+  function formatTime(iso: string): string {
+    try {
+      return format.dateTime(new Date(iso), { hour: '2-digit', minute: '2-digit' });
+    } catch {
+      return '—';
+    }
+  }
 
   if (isLoading) {
     return (
@@ -101,14 +107,14 @@ export function RecessionGauge({
   }
 
   const color = signalColor(probability);
-  const label = signalLabel(probability);
+  const label = getSignalLabel(probability);
   const fillDash = `${displayProb} 100`;
 
   return (
     <div style={{ padding: '16px 20px 12px' }}>
       {/* Panel label */}
       <div className="gw-panel-label" style={{ marginBottom: '8px' }}>
-        Recession Probability
+        {t('panelLabel')}
       </div>
 
       {/* SVG Gauge */}
@@ -116,7 +122,7 @@ export function RecessionGauge({
         viewBox="0 0 280 175"
         width="100%"
         style={{ overflow: 'hidden', display: 'block', maxWidth: '320px', margin: '0 auto' }}
-        aria-label={`Recession probability gauge: ${probability.toFixed(1)}%`}
+        aria-label={t('ariaLabel', { probability: probability.toFixed(1) })}
         role="img"
       >
         {/* Color zone background arcs (dim, 25% each) */}
@@ -188,7 +194,7 @@ export function RecessionGauge({
           fontFamily="'DM Sans', sans-serif"
           fontSize={11}
         >
-          Confidence: {confidence}
+          {t('confidence', { value: confidence })}
         </text>
 
         {/* Meta: updated time + data source */}
@@ -210,16 +216,16 @@ export function RecessionGauge({
         gap: '14px',
         marginTop: '4px',
       }}>
-        {[
-          { label: 'Low', color: '#00C853' },
-          { label: 'Moderate', color: '#FFD600' },
-          { label: 'Elevated', color: '#FF6D00' },
-          { label: 'Severe', color: '#FF1744' },
-        ].map(({ label: l, color: c }) => (
-          <div key={l} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+        {([
+          { key: 'low',      color: '#00C853' },
+          { key: 'moderate', color: '#FFD600' },
+          { key: 'elevated', color: '#FF6D00' },
+          { key: 'severe',   color: '#FF1744' },
+        ] as const).map(({ key, color: c }) => (
+          <div key={key} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
             <div style={{ width: 8, height: 8, borderRadius: '50%', background: c, opacity: 0.8 }} />
             <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontFamily: 'var(--font-body)' }}>
-              {l}
+              {t(`zones.${key}`)}
             </span>
           </div>
         ))}

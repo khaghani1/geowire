@@ -1,5 +1,229 @@
 {
   "common": {
-    "appName": "GeoWire"
+    "appName": "GeoWire",
+    "tagline": "Recession Intelligence Platform"
+  },
+
+  "nav": {
+    "dashboard": "Dashboard",
+    "analysis": "Analysis",
+    "calculator": "Calculator",
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "userDashboard": "Dashboard"
+  },
+
+  "alertBanner": {
+    "message": "Strait of Hormuz disruption risk elevated — Recession probability: <highlight>{probability}%</highlight>"
+  },
+
+  "footer": {
+    "copyright": "GeoWire © 2026",
+    "about": "About",
+    "methodology": "Methodology",
+    "apiComingSoon": "API (coming soon)",
+    "privacy": "Privacy"
+  },
+
+  "home": {
+    "latestIntelligence": "Latest Intelligence",
+    "recessionFactors": "Recession Factors",
+    "kpi": {
+      "recessionProbability": {
+        "label": "Recession Probability",
+        "value": "62%",
+        "sublabel": "12-month horizon"
+      },
+      "oilPriceImpact": {
+        "label": "Oil Price Impact",
+        "value": "+$18.40",
+        "sublabel": "above baseline"
+      },
+      "supplyChainStress": {
+        "label": "Supply Chain Stress",
+        "value": "7.2 / 10",
+        "sublabel": "composite index"
+      },
+      "marketSentiment": {
+        "label": "Market Sentiment",
+        "value": "Fear",
+        "sublabel": "CNN Fear & Greed proxy"
+      }
+    },
+    "articles": {
+      "hormuzDisruption": {
+        "title": "Strait of Hormuz Disruption Elevates Energy Shock Risk",
+        "date": "Mar 31, 2026",
+        "excerpt": "Naval tensions in the Persian Gulf have pushed WTI crude above $105, threatening to trigger the Hamilton oil-shock threshold that historically precedes recession within 12 months."
+      },
+      "yieldCurveInversion": {
+        "title": "Yield Curve Remains Inverted for 18th Consecutive Month",
+        "date": "Mar 28, 2026",
+        "excerpt": "The 10Y-2Y spread sits at -42bps. The Estrella-Mishkin probit model assigns a 62% probability of recession within the next 12 months based on current spread levels."
+      },
+      "sahmRuleWatch": {
+        "title": "Sahm Rule Indicator Approaches Trigger Threshold",
+        "date": "Mar 25, 2026",
+        "excerpt": "The 3-month moving average of unemployment has risen 0.38 percentage points above its 12-month minimum — within 0.12pp of Claudia Sahm's recession trigger at 0.50pp."
+      }
+    },
+    "factors": {
+      "yieldCurve": { "name": "Yield Curve", "status": "Inverted" },
+      "oilShock": { "name": "Oil Shock", "status": "Elevated" },
+      "consumerSentiment": { "name": "Consumer Sentiment", "status": "Deteriorating" },
+      "lei": { "name": "LEI", "status": "Declining" },
+      "creditSpreads": { "name": "Credit Spreads", "status": "Normal" },
+      "sahmRule": { "name": "Sahm Rule", "status": "Not Triggered" }
+    }
+  },
+
+  "dashboard": {
+    "title": "Recession Intelligence Dashboard",
+    "subtitle": "Live composite score — model breakdown, FRED indicators, and alerts in one view.",
+    "callsRemaining": "{count} API calls remaining today",
+    "upgrade": "Upgrade →",
+    "quickActionsTitle": "Quick Actions",
+    "divergenceWarning": {
+      "title": "Divergence Warning",
+      "body": "Composite score ({composite}%) diverges {diff}pp from Chauvet-Piger ({chauvet}%). Interpret with caution."
+    },
+    "quickActions": {
+      "analysis": {
+        "label": "Full Analysis",
+        "description": "Detailed breakdown of all recession indicators"
+      },
+      "calculator": {
+        "label": "Recession Calculator",
+        "description": "Model custom scenarios with your own inputs"
+      },
+      "methodology": {
+        "label": "Methodology",
+        "description": "How GeoWire builds its composite score"
+      }
+    },
+    "footnote": "Chauvet-Piger (RECPROUSM156N): {chauvet} · Composite confidence: {confidence} · Data source: {dataSource} · Fetched: {fetchedAt}"
+  },
+
+  "gauge": {
+    "panelLabel": "Recession Probability",
+    "ariaLabel": "Recession probability gauge: {probability}%",
+    "confidence": "Confidence: {value}",
+    "zones": {
+      "low": "Low",
+      "moderate": "Moderate",
+      "elevated": "Elevated",
+      "severe": "Severe"
+    },
+    "signals": {
+      "lowRisk": "LOW RISK",
+      "moderate": "MODERATE",
+      "elevated": "ELEVATED",
+      "high": "HIGH",
+      "severe": "SEVERE"
+    }
+  },
+
+  "modelBreakdown": {
+    "panelLabel": "Model Breakdown",
+    "source": "Source: ",
+    "inputValue": "Input value: ",
+    "triggered": "⚠ Triggered",
+    "notTriggered": "✓ Not triggered"
+  },
+
+  "indicatorTable": {
+    "panelLabel": "Key Indicators",
+    "headers": {
+      "indicator": "Indicator",
+      "current": "Current",
+      "previous": "Previous",
+      "change": "Change",
+      "src": "Src"
+    },
+    "legend": {
+      "live": "Live",
+      "cached": "Cached",
+      "seed": "Seed"
+    },
+    "dataSourceTooltip": "Data source: {source}"
+  },
+
+  "alertFeed": {
+    "panelLabel": "Alert Feed",
+    "severity": {
+      "critical": "CRITICAL",
+      "high": "HIGH",
+      "medium": "MEDIUM",
+      "low": "LOW"
+    },
+    "alerts": {
+      "oilShock2026": {
+        "title": "Hamilton Oil-Shock Threshold Breached",
+        "timestamp": "Apr 1, 2026 · 09:14",
+        "summary": "WTI crude has exceeded its 36-month maximum. Hamilton NOPI model signals elevated recession risk within 12 months."
+      },
+      "yieldUnInversion": {
+        "title": "Yield Curve Un-Inverting — Watch for Bear Steepener",
+        "timestamp": "Mar 31, 2026 · 16:30",
+        "summary": "10Y-3M spread turned positive (+0.60%). Historical pattern: recession often arrives after the curve steepens from inversion."
+      },
+      "sahmBelowThreshold": {
+        "title": "Sahm Rule at 0.43pp — Below 0.50 Trigger",
+        "timestamp": "Mar 28, 2026 · 12:00",
+        "summary": "SAHMCURRENT sits at 0.43pp. The 0.50pp recession trigger has not been crossed, but the trend warrants monitoring."
+      },
+      "creditSpreadsStable": {
+        "title": "HY Spreads Stable Below 3.0%",
+        "timestamp": "Mar 27, 2026 · 08:00",
+        "summary": "ICE BofA HY OAS at 2.96%. Credit markets remain complacent relative to equity and rates signals."
+      },
+      "phillyFedPositive": {
+        "title": "Philadelphia Fed Leading Index Positive for 3rd Month",
+        "timestamp": "Mar 25, 2026 · 10:00",
+        "summary": "USSLIND (Philadelphia Fed Leading Index) remains positive at +0.42%, providing a countervailing signal to yield curve models."
+      },
+      "tariffEscalation": {
+        "title": "New Tariff Tranche Expands to Industrial Inputs",
+        "timestamp": "Mar 22, 2026 · 14:45",
+        "summary": "The latest tariff round covers steel, aluminum, and electronic components — increasing supply-chain inflation risk."
+      },
+      "gdpRevision": {
+        "title": "Q4 2025 Real GDP Revised Up to +2.1% Annualized",
+        "timestamp": "Mar 20, 2026 · 09:30",
+        "summary": "The BEA revision reduces recession probability near-term. However, leading indicators continue to soften."
+      },
+      "michiganSentiment": {
+        "title": "Michigan Consumer Sentiment Falls to 74.0",
+        "timestamp": "Mar 14, 2026 · 10:00",
+        "summary": "Consumers increasingly cite inflation and trade uncertainty. Sentiment is a coincident indicator of economic stress."
+      }
+    }
+  },
+
+  "login": {
+    "tagline": "Recession Intelligence Platform",
+    "heading": "Sign in to your account",
+    "continueWithGoogle": "Continue with Google",
+    "redirecting": "Redirecting…",
+    "orContinueWithEmail": "or continue with email",
+    "checkInbox": "Check your inbox",
+    "checkInboxDetail": "We sent a magic link to <b>{email}</b>. Click it to sign in — no password needed.",
+    "emailLabel": "Email address",
+    "emailPlaceholder": "you@example.com",
+    "sendMagicLink": "Send Magic Link",
+    "sending": "Sending…",
+    "errorFallback": "Something went wrong. Try again.",
+    "footerNote": "By signing in you agree to the GeoWire Terms of Service. No password required — we use secure magic links."
+  },
+
+  "paywall": {
+    "ariaLabel": "Pro feature — upgrade to unlock",
+    "title": "Pro Feature",
+    "body": "Unlock all 6 models and real-time data",
+    "cta": "Upgrade to Pro"
+  },
+
+  "languageSwitcher": {
+    "en": "🇺🇸 English"
   }
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import type { FredSeriesResult } from '@/lib/data/fred';
 import { Skeleton } from '@/components/ui/Skeleton';
 
@@ -107,6 +108,7 @@ interface IndicatorTableProps {
 }
 
 export function IndicatorTable({ seriesMap, isLoading }: IndicatorTableProps) {
+  const t = useTranslations('indicatorTable');
   const [sortKey, setSortKey] = useState<SortKey>('label');
   const [sortDir, setSortDir] = useState<SortDir>('asc');
 
@@ -158,7 +160,7 @@ export function IndicatorTable({ seriesMap, isLoading }: IndicatorTableProps) {
   return (
     <div style={{ padding: '16px' }}>
       <div className="gw-panel-label" style={{ marginBottom: '10px' }}>
-        Key Indicators
+        {t('panelLabel')}
       </div>
 
       {isLoading ? (
@@ -181,29 +183,29 @@ export function IndicatorTable({ seriesMap, isLoading }: IndicatorTableProps) {
                   style={{ ...colStyle('label'), textAlign: 'left' }}
                   onClick={() => handleSort('label')}
                 >
-                  Indicator {sortKey === 'label' ? (sortDir === 'asc' ? '↑' : '↓') : ''}
+                  {t('headers.indicator')} {sortKey === 'label' ? (sortDir === 'asc' ? '↑' : '↓') : ''}
                 </th>
                 <th
                   style={{ ...colStyle('current'), textAlign: 'right' }}
                   onClick={() => handleSort('current')}
                 >
-                  Current {sortKey === 'current' ? (sortDir === 'asc' ? '↑' : '↓') : ''}
+                  {t('headers.current')} {sortKey === 'current' ? (sortDir === 'asc' ? '↑' : '↓') : ''}
                 </th>
                 <th style={{
                   ...colStyle('label'),
                   textAlign: 'right',
                   cursor: 'default',
                 }}>
-                  Previous
+                  {t('headers.previous')}
                 </th>
                 <th
                   style={{ ...colStyle('change'), textAlign: 'right' }}
                   onClick={() => handleSort('change')}
                 >
-                  Change {sortKey === 'change' ? (sortDir === 'asc' ? '↑' : '↓') : ''}
+                  {t('headers.change')} {sortKey === 'change' ? (sortDir === 'asc' ? '↑' : '↓') : ''}
                 </th>
                 <th style={{ ...colStyle('label'), textAlign: 'center', cursor: 'default', width: '40px' }}>
-                  Src
+                  {t('headers.src')}
                 </th>
               </tr>
             </thead>
@@ -247,7 +249,7 @@ export function IndicatorTable({ seriesMap, isLoading }: IndicatorTableProps) {
                     {/* Source */}
                     <td style={{ padding: '9px 10px', textAlign: 'center' }}>
                       <span
-                        title={`Data source: ${row.dataSource}`}
+                        title={t('dataSourceTooltip', { source: row.dataSource })}
                         style={{ color: sourceColor(row.dataSource), fontSize: '11px' }}
                       >
                         {sourceTag(row.dataSource)}
@@ -261,13 +263,13 @@ export function IndicatorTable({ seriesMap, isLoading }: IndicatorTableProps) {
 
           {/* Legend */}
           <div style={{ marginTop: '8px', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-            {[
-              { tag: '●', label: 'Live', color: '#00C853' },
-              { tag: '◑', label: 'Cached', color: '#FFD600' },
-              { tag: '○', label: 'Seed', color: '#FF6D00' },
-            ].map(({ tag, label, color }) => (
-              <span key={label} style={{ fontSize: '10px', color: 'var(--text-secondary)', fontFamily: 'var(--font-body)' }}>
-                <span style={{ color }}>{tag}</span> {label}
+            {([
+              { key: 'live',   tag: '●', color: '#00C853' },
+              { key: 'cached', tag: '◑', color: '#FFD600' },
+              { key: 'seed',   tag: '○', color: '#FF6D00' },
+            ] as const).map(({ key, tag, color }) => (
+              <span key={key} style={{ fontSize: '10px', color: 'var(--text-secondary)', fontFamily: 'var(--font-body)' }}>
+                <span style={{ color }}>{tag}</span> {t(`legend.${key}`)}
               </span>
             ))}
           </div>

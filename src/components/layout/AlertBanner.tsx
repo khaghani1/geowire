@@ -1,4 +1,8 @@
+import { useTranslations } from 'next-intl';
+
 export function AlertBanner() {
+  const t = useTranslations('alertBanner');
+
   return (
     <div
       style={{
@@ -20,8 +24,12 @@ export function AlertBanner() {
         ⚠
       </span>
       <span>
-        Strait of Hormuz disruption risk elevated &mdash; Recession probability:{' '}
-        <strong style={{ color: '#FF1744' }}>62%</strong>
+        {t.rich('message', {
+          probability: 62,
+          strong: (chunks) => (
+            <strong style={{ color: '#FF1744' }}>{chunks}</strong>
+          ),
+        })}
       </span>
     </div>
   );

@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import { AlertBanner } from '@/components/layout/AlertBanner';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
@@ -5,95 +6,39 @@ import { GlassCard } from '@/components/ui/GlassCard';
 import { SeverityBadge } from '@/components/ui/SeverityBadge';
 import type { Severity } from '@/components/ui/SeverityBadge';
 
-// ── Seed data (hardcoded for Session 1) ──────────────────────────────
+// ── Static data keys (content lives in en.json) ──────────────────────────
 
-interface KpiCard {
-  label: string;
-  value: string;
-  sublabel: string;
-  accentColor: string;
-}
+type KpiKey = 'recessionProbability' | 'oilPriceImpact' | 'supplyChainStress' | 'marketSentiment';
+type ArticleKey = 'hormuzDisruption' | 'yieldCurveInversion' | 'sahmRuleWatch';
+type FactorKey = 'yieldCurve' | 'oilShock' | 'consumerSentiment' | 'lei' | 'creditSpreads' | 'sahmRule';
 
-const KPI_CARDS: KpiCard[] = [
-  {
-    label: 'Recession Probability',
-    value: '62%',
-    sublabel: '12-month horizon',
-    accentColor: 'var(--amber)',
-  },
-  {
-    label: 'Oil Price Impact',
-    value: '+$18.40',
-    sublabel: 'above baseline',
-    accentColor: 'var(--red)',
-  },
-  {
-    label: 'Supply Chain Stress',
-    value: '7.2 / 10',
-    sublabel: 'composite index',
-    accentColor: 'var(--amber)',
-  },
-  {
-    label: 'Market Sentiment',
-    value: 'Fear',
-    sublabel: 'CNN Fear & Greed proxy',
-    accentColor: 'var(--red)',
-  },
+const KPI_KEYS: { key: KpiKey; accentColor: string }[] = [
+  { key: 'recessionProbability', accentColor: 'var(--amber)' },
+  { key: 'oilPriceImpact',       accentColor: 'var(--red)' },
+  { key: 'supplyChainStress',    accentColor: 'var(--amber)' },
+  { key: 'marketSentiment',      accentColor: 'var(--red)' },
 ];
 
-interface Article {
-  id: string;
-  title: string;
-  date: string;
-  severity: Severity;
-  excerpt: string;
-}
-
-const ARTICLES: Article[] = [
-  {
-    id: 'hormuz-disruption',
-    title: 'Strait of Hormuz Disruption Elevates Energy Shock Risk',
-    date: 'Mar 31, 2026',
-    severity: 'critical',
-    excerpt:
-      'Naval tensions in the Persian Gulf have pushed WTI crude above $105, threatening to trigger the Hamilton oil-shock threshold that historically precedes recession within 12 months.',
-  },
-  {
-    id: 'yield-curve-inversion',
-    title: 'Yield Curve Remains Inverted for 18th Consecutive Month',
-    date: 'Mar 28, 2026',
-    severity: 'high',
-    excerpt:
-      'The 10Y-2Y spread sits at -42bps. The Estrella-Mishkin probit model assigns a 62% probability of recession within the next 12 months based on current spread levels.',
-  },
-  {
-    id: 'sahm-rule-watch',
-    title: 'Sahm Rule Indicator Approaches Trigger Threshold',
-    date: 'Mar 25, 2026',
-    severity: 'high',
-    excerpt:
-      "The 3-month moving average of unemployment has risen 0.38 percentage points above its 12-month minimum — within 0.12pp of Claudia Sahm's recession trigger at 0.50pp.",
-  },
+const ARTICLE_KEYS: { key: ArticleKey; severity: Severity }[] = [
+  { key: 'hormuzDisruption',    severity: 'critical' },
+  { key: 'yieldCurveInversion', severity: 'high' },
+  { key: 'sahmRuleWatch',       severity: 'high' },
 ];
 
-interface RecessionFactor {
-  name: string;
-  status: string;
-  indicator: '🔴' | '🟡' | '🟢';
-}
-
-const RECESSION_FACTORS: RecessionFactor[] = [
-  { name: 'Yield Curve', status: 'Inverted', indicator: '🔴' },
-  { name: 'Oil Shock', status: 'Elevated', indicator: '🟡' },
-  { name: 'Consumer Sentiment', status: 'Deteriorating', indicator: '🔴' },
-  { name: 'LEI', status: 'Declining', indicator: '🟡' },
-  { name: 'Credit Spreads', status: 'Normal', indicator: '🟢' },
-  { name: 'Sahm Rule', status: 'Not Triggered', indicator: '🟢' },
+const FACTOR_KEYS: { key: FactorKey; indicator: '🔴' | '🟡' | '🟢' }[] = [
+  { key: 'yieldCurve',        indicator: '🔴' },
+  { key: 'oilShock',          indicator: '🟡' },
+  { key: 'consumerSentiment', indicator: '🔴' },
+  { key: 'lei',               indicator: '🟡' },
+  { key: 'creditSpreads',     indicator: '🟢' },
+  { key: 'sahmRule',          indicator: '🟢' },
 ];
 
-// ── Component ─────────────────────────────────────────────────────────
+// ── Component ─────────────────────────────────────────────────────────────
 
 export default function HomePage() {
+  const t = useTranslations('home');
+
   return (
     <div
       style={{
@@ -122,8 +67,14 @@ export default function HomePage() {
             }}
             className="kpi-grid"
           >
-            {KPI_CARDS.map((card) => (
-              <KpiCardItem key={card.label} card={card} />
+            {KPI_KEYS.map(({ key, accentColor }) => (
+              <KpiCardItem
+                key={key}
+                label={t(`kpi.${key}.label`)}
+                value={t(`kpi.${key}.value`)}
+                sublabel={t(`kpi.${key}.sublabel`)}
+                accentColor={accentColor}
+              />
             ))}
           </div>
         </section>
@@ -150,11 +101,17 @@ export default function HomePage() {
                 letterSpacing: '-0.01em',
               }}
             >
-              Latest Intelligence
+              {t('latestIntelligence')}
             </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {ARTICLES.map((article) => (
-                <ArticleCard key={article.id} article={article} />
+              {ARTICLE_KEYS.map(({ key, severity }) => (
+                <ArticleCard
+                  key={key}
+                  title={t(`articles.${key}.title`)}
+                  date={t(`articles.${key}.date`)}
+                  excerpt={t(`articles.${key}.excerpt`)}
+                  severity={severity}
+                />
               ))}
             </div>
           </div>
@@ -171,14 +128,16 @@ export default function HomePage() {
                 letterSpacing: '-0.01em',
               }}
             >
-              Recession Factors
+              {t('recessionFactors')}
             </h2>
             <GlassCard style={{ padding: '8px 0' }}>
-              {RECESSION_FACTORS.map((factor, i) => (
+              {FACTOR_KEYS.map(({ key, indicator }, i) => (
                 <RecessionFactorRow
-                  key={factor.name}
-                  factor={factor}
-                  isLast={i === RECESSION_FACTORS.length - 1}
+                  key={key}
+                  name={t(`factors.${key}.name`)}
+                  status={t(`factors.${key}.status`)}
+                  indicator={indicator}
+                  isLast={i === FACTOR_KEYS.length - 1}
                 />
               ))}
             </GlassCard>
@@ -209,13 +168,23 @@ export default function HomePage() {
   );
 }
 
-// ── Sub-components ────────────────────────────────────────────────────
+// ── Sub-components ────────────────────────────────────────────────────────
 
-function KpiCardItem({ card }: { card: KpiCard }) {
+function KpiCardItem({
+  label,
+  value,
+  sublabel,
+  accentColor,
+}: {
+  label: string;
+  value: string;
+  sublabel: string;
+  accentColor: string;
+}) {
   return (
     <GlassCard
-      accentColor={card.accentColor}
-      className={`kpi-enter`}
+      accentColor={accentColor}
+      className="kpi-enter"
       style={{ padding: '20px 20px 16px' }}
     >
       <div
@@ -228,7 +197,7 @@ function KpiCardItem({ card }: { card: KpiCard }) {
           marginBottom: '10px',
         }}
       >
-        {card.label}
+        {label}
       </div>
       <div
         className="data-value"
@@ -240,7 +209,7 @@ function KpiCardItem({ card }: { card: KpiCard }) {
           marginBottom: '6px',
         }}
       >
-        {card.value}
+        {value}
       </div>
       <div
         style={{
@@ -249,13 +218,23 @@ function KpiCardItem({ card }: { card: KpiCard }) {
           fontFamily: 'var(--font-body)',
         }}
       >
-        {card.sublabel}
+        {sublabel}
       </div>
     </GlassCard>
   );
 }
 
-function ArticleCard({ article }: { article: Article }) {
+function ArticleCard({
+  title,
+  date,
+  excerpt,
+  severity,
+}: {
+  title: string;
+  date: string;
+  excerpt: string;
+  severity: Severity;
+}) {
   return (
     <GlassCard style={{ padding: '16px 20px' }}>
       <div
@@ -266,7 +245,7 @@ function ArticleCard({ article }: { article: Article }) {
           marginBottom: '8px',
         }}
       >
-        <SeverityBadge severity={article.severity} />
+        <SeverityBadge severity={severity} />
         <span
           style={{
             fontSize: '12px',
@@ -274,7 +253,7 @@ function ArticleCard({ article }: { article: Article }) {
             fontFamily: 'var(--font-data)',
           }}
         >
-          {article.date}
+          {date}
         </span>
       </div>
       <h3
@@ -287,7 +266,7 @@ function ArticleCard({ article }: { article: Article }) {
           lineHeight: 1.3,
         }}
       >
-        {article.title}
+        {title}
       </h3>
       <p
         style={{
@@ -297,17 +276,21 @@ function ArticleCard({ article }: { article: Article }) {
           fontFamily: 'var(--font-body)',
         }}
       >
-        {article.excerpt}
+        {excerpt}
       </p>
     </GlassCard>
   );
 }
 
 function RecessionFactorRow({
-  factor,
+  name,
+  status,
+  indicator,
   isLast,
 }: {
-  factor: RecessionFactor;
+  name: string;
+  status: string;
+  indicator: '🔴' | '🟡' | '🟢';
   isLast: boolean;
 }) {
   return (
@@ -327,7 +310,7 @@ function RecessionFactorRow({
           fontFamily: 'var(--font-body)',
         }}
       >
-        {factor.name}
+        {name}
       </span>
       <div
         style={{
@@ -343,10 +326,10 @@ function RecessionFactorRow({
             fontFamily: 'var(--font-data)',
           }}
         >
-          {factor.status}
+          {status}
         </span>
-        <span style={{ fontSize: '14px' }} aria-label={factor.status}>
-          {factor.indicator}
+        <span style={{ fontSize: '14px' }} aria-label={status}>
+          {indicator}
         </span>
       </div>
     </div>

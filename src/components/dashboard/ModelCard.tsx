@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import type { ModelResult } from '@/lib/scoring/engine';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { PaywallOverlay } from '@/components/auth/PaywallOverlay';
@@ -39,6 +40,7 @@ interface ModelCardProps {
 }
 
 export function ModelCard({ model }: ModelCardProps) {
+  const t = useTranslations('modelBreakdown');
   const borderColor = signalBorderColor(model.signal);
   const dotColor = signalDotColor(model.signal);
   const bg = signalBg(model.signal);
@@ -114,7 +116,7 @@ export function ModelCard({ model }: ModelCardProps) {
           fontFamily: 'var(--font-body)',
           lineHeight: 1.55,
         }}>
-          <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>Source: </span>
+          <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{t('source')}</span>
           {model.citation}
         </div>
         {model.inputValue !== null && (
@@ -124,7 +126,7 @@ export function ModelCard({ model }: ModelCardProps) {
             color: 'var(--text-secondary)',
             fontFamily: 'var(--font-data)',
           }}>
-            Input value: <span style={{ color: 'var(--text-primary)' }}>
+            {t('inputValue')}<span style={{ color: 'var(--text-primary)' }}>
               {typeof model.inputValue === 'number'
                 ? model.inputValue.toFixed(2)
                 : model.inputValue}
@@ -148,7 +150,7 @@ export function ModelCard({ model }: ModelCardProps) {
           letterSpacing: '0.05em',
           textTransform: 'uppercase',
         }}>
-          {model.triggered ? '⚠ Triggered' : '✓ Not triggered'}
+          {model.triggered ? t('triggered') : t('notTriggered')}
         </div>
       </div>
     </details>
@@ -165,10 +167,12 @@ interface ModelBreakdownProps {
 }
 
 export function ModelBreakdown({ models, isLoading, tier = 'free' }: ModelBreakdownProps) {
+  const t = useTranslations('modelBreakdown');
+
   return (
     <div style={{ padding: '16px' }}>
       <div className="gw-panel-label" style={{ marginBottom: '10px' }}>
-        Model Breakdown
+        {t('panelLabel')}
       </div>
       {isLoading ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>

@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations, useFormatter } from 'next-intl';
 import { AlertBanner } from '@/components/layout/AlertBanner';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
@@ -13,38 +14,27 @@ import { useFredSeries, buildSeriesMap } from '@/hooks/useFredSeries';
 import { useProfile } from '@/hooks/useProfile';
 import { getTierPermissions, tierLabel } from '@/lib/auth/permissions';
 
-// ─── Quick Actions ─────────────────────────────────────────────────────────────
+// ─── Quick Action IDs (labels & descriptions come from en.json) ────────────────
 
-const QUICK_ACTIONS = [
-  {
-    id: 'analysis',
-    label: 'Full Analysis',
-    description: 'Detailed breakdown of all recession indicators',
-    icon: '📊',
-    href: '#',
-    accentColor: 'var(--accent)',
-  },
-  {
-    id: 'calculator',
-    label: 'Recession Calculator',
-    description: 'Model custom scenarios with your own inputs',
-    icon: '🧮',
-    href: '#',
-    accentColor: 'var(--amber)',
-  },
-  {
-    id: 'methodology',
-    label: 'Methodology',
-    description: 'How GeoWire builds its composite score',
-    icon: '📖',
-    href: '#',
-    accentColor: 'var(--green)',
-  },
+type QuickActionId = 'analysis' | 'calculator' | 'methodology';
+
+interface QuickActionDef {
+  id: QuickActionId;
+  icon: string;
+  href: string;
+  accentColor: string;
+}
+
+const QUICK_ACTIONS: QuickActionDef[] = [
+  { id: 'analysis',    icon: '📊', href: '#', accentColor: 'var(--accent)' },
+  { id: 'calculator', icon: '🧮', href: '#', accentColor: 'var(--amber)' },
+  { id: 'methodology',icon: '📖', href: '#', accentColor: 'var(--green)' },
 ];
 
 // ─── Divergence Warning Banner ─────────────────────────────────────────────────
 
 function DivergenceBanner({ chauvetProb, compositeProb }: { chauvetProb: number; compositeProb: number }) {
+  const t = useTranslations('dashboard');
   const diff = Math.abs(compositeProb - chauvetProb);
   return (
     <div style={{
@@ -60,11 +50,14 @@ function DivergenceBanner({ chauvetProb, compositeProb }: { chauvetProb: number;
       <span style={{ fontSize: '14px', flexShrink: 0 }}>⚠</span>
       <div>
         <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--amber)', fontFamily: 'var(--font-body)', marginBottom: '2px' }}>
-          Divergence Warning
+          {t('divergenceWarning.title')}
         </div>
         <div style={{ fontSize: '11px', color: 'var(--text-secondary)', fontFamily: 'var(--font-body)', lineHeight: 1.45 }}>
-          Composite score ({compositeProb.toFixed(0)}%) diverges {diff.toFixed(0)}pp from
-          Chauvet-Piger ({chauvetProb.toFixed(0)}%). Interpret with caution.
+          {t('divergenceWarning.body', {
+            composite: compositeProb.toFixed(0),
+            diff: diff.toFixed(0),
+            chauvet: chauvetProb.toFixed(0),
+          })}
         </div>
       </div>
     </div>
@@ -74,12 +67,12 @@ function DivergenceBanner({ chauvetProb, compositeProb }: { chauvetProb: number;
 // ─── Quick Action Button ───────────────────────────────────────────────────────
 
 function QuickActionButton({
-  label,
-  description,
+  id,
   icon,
   href,
   accentColor,
-}: typeof QUICK_ACTIONS[0]) {
+}: QuickActionDef) {
+  const t = useTranslations('dashboard');
   return (
     <a
       href={href}
@@ -124,7 +117,7 @@ function QuickActionButton({
           fontFamily: 'var(--font-body)',
           marginBottom: '2px',
         }}>
-          {label}
+          {t(`quickActions.${id}.label`)}
         </div>
         <div style={{
           fontSize: '11px',
@@ -135,7 +128,7 @@ function QuickActionButton({
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
         }}>
-          {description}
+          {t(`quickActions.${id}.description`)}
         </div>
       </div>
       <span style={{ marginLeft: 'auto', fontSize: '14px', color: 'var(--text-secondary)', flexShrink: 0 }}>→</span>
@@ -146,6 +139,9 @@ function QuickActionButton({
 // ─── Dashboard Page ────────────────────────────────────────────────────────────
 
 export default function DashboardPage() {
+  const t = useTranslations('dashboard');
+  const format = useFormatter();
+
   const scoreQuery = useRecessionScore();
   const seriesResults = useFredSeries();
   const { profile, loading: profileLoading } = useProfile();
@@ -192,14 +188,14 @@ export default function DashboardPage() {
               letterSpacing: '-0.02em',
               marginBottom: '4px',
             }}>
-              Recession Intelligence Dashboard
+              {t('title')}
             </h1>
             <p style={{
               fontSize: '13px',
               color: 'var(--text-secondary)',
               fontFamily: 'var(--font-body)',
             }}>
-              Live composite score — model breakdown, FRED indicators, and alerts in one view.
+              {t('subtitle')}
             </p>
           </div>
 
@@ -219,10 +215,10 @@ export default function DashboardPage() {
                 {tierLabel(tier)}
               </span>
               <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontFamily: 'var(--font-data)' }}>
-                {Math.max(0, callsRemaining)} API calls remaining today
+                {t('callsRemaining', { count: Math.max(0, callsRemaining) })}
               </span>
               <a href="#" style={{ fontSize: '11px', color: 'var(--accent)', fontFamily: 'var(--font-body)', fontWeight: 600, textDecoration: 'none' }}>
-                Upgrade →
+                {t('upgrade')}
               </a>
             </div>
           )}
@@ -307,7 +303,7 @@ export default function DashboardPage() {
             <GlassCard>
               <div style={{ padding: '16px' }}>
                 <div className="gw-panel-label" style={{ marginBottom: '10px' }}>
-                  Quick Actions
+                  {t('quickActionsTitle')}
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {QUICK_ACTIONS.map((action) => (
@@ -329,10 +325,12 @@ export default function DashboardPage() {
             lineHeight: 1.5,
             opacity: 0.7,
           }}>
-            Chauvet-Piger (RECPROUSM156N): {score.chauvetPigerProb !== null ? `${score.chauvetPigerProb.toFixed(1)}%` : 'N/A'} ·
-            Composite confidence: {confidence} ·
-            Data source: {dataSource} ·
-            Fetched: {new Date(fetchedAt).toLocaleString()}
+            {t('footnote', {
+              chauvet: score.chauvetPigerProb !== null ? `${score.chauvetPigerProb.toFixed(1)}%` : 'N/A',
+              confidence,
+              dataSource,
+              fetchedAt: format.dateTime(new Date(fetchedAt)),
+            })}
           </div>
         )}
       </main>

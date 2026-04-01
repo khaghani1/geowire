@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { createClient } from '@/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
 
@@ -12,6 +13,7 @@ import type { User } from '@supabase/supabase-js';
  */
 export function NavbarUserMenu() {
   const router = useRouter();
+  const t = useTranslations('nav');
   const [user, setUser] = useState<User | null>(null);
   const [loaded, setLoaded] = useState(false);
 
@@ -72,7 +74,7 @@ export function NavbarUserMenu() {
         onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.opacity = '0.85'; }}
         onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.opacity = '1'; }}
       >
-        Sign In
+        {t('signIn')}
       </a>
     );
   }
@@ -155,7 +157,7 @@ export function NavbarUserMenu() {
           onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = 'var(--bg-tertiary)'; }}
           onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = 'transparent'; }}
         >
-          <span>📊</span> Dashboard
+          <span>📊</span> {t('userDashboard')}
         </a>
         <div style={{ height: 1, background: 'var(--border-subtle)' }} />
         <button
@@ -179,7 +181,7 @@ export function NavbarUserMenu() {
           onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,23,68,0.08)'; }}
           onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}
         >
-          <span>🚪</span> Sign Out
+          <span>🚪</span> {t('signOut')}
         </button>
       </div>
     </details>

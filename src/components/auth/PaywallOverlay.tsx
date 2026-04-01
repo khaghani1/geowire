@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 /**
  * PaywallOverlay
  *
@@ -18,9 +20,11 @@ interface PaywallOverlayProps {
 }
 
 export function PaywallOverlay({ upgradeHref = '#' }: PaywallOverlayProps) {
+  const t = useTranslations('paywall');
+
   return (
     <div
-      aria-label="Pro feature — upgrade to unlock"
+      aria-label={t('ariaLabel')}
       style={{
         position: 'absolute',
         inset: 0,
@@ -60,7 +64,7 @@ export function PaywallOverlay({ upgradeHref = '#' }: PaywallOverlayProps) {
           fontFamily: 'var(--font-heading)',
           marginBottom: '4px',
         }}>
-          Pro Feature
+          {t('title')}
         </div>
         <div style={{
           fontSize: '11px',
@@ -69,7 +73,7 @@ export function PaywallOverlay({ upgradeHref = '#' }: PaywallOverlayProps) {
           lineHeight: 1.4,
           maxWidth: 160,
         }}>
-          Unlock all 6 models and real-time data
+          {t('body')}
         </div>
       </div>
 
@@ -94,7 +98,7 @@ export function PaywallOverlay({ upgradeHref = '#' }: PaywallOverlayProps) {
         onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.opacity = '0.85'; }}
         onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.opacity = '1'; }}
       >
-        Upgrade to Pro
+        {t('cta')}
       </a>
     </div>
   );

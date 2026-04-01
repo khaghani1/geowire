@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { createClient } from '@/lib/supabase/client';
 
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const t = useTranslations('login');
   const next = searchParams.get('next') ?? '/en/dashboard';
 
   const [email, setEmail] = useState('');
@@ -96,7 +98,7 @@ export default function LoginPage() {
             fontFamily: 'var(--font-body)',
             marginTop: '4px',
           }}>
-            Recession Intelligence Platform
+            {t('tagline')}
           </div>
         </div>
 
@@ -109,7 +111,7 @@ export default function LoginPage() {
           marginBottom: '20px',
           textAlign: 'center',
         }}>
-          Sign in to your account
+          {t('heading')}
         </h1>
 
         {/* Google OAuth button */}
@@ -143,7 +145,7 @@ export default function LoginPage() {
             <path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332Z" fill="#FBBC05"/>
             <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58Z" fill="#EA4335"/>
           </svg>
-          {oauthLoading ? 'Redirecting…' : 'Continue with Google'}
+          {oauthLoading ? t('redirecting') : t('continueWithGoogle')}
         </button>
 
         {/* Divider */}
@@ -155,7 +157,7 @@ export default function LoginPage() {
         }}>
           <div style={{ flex: 1, height: 1, background: 'var(--border-subtle)' }} />
           <span style={{ fontSize: '12px', color: 'var(--text-secondary)', fontFamily: 'var(--font-body)' }}>
-            or continue with email
+            {t('orContinueWithEmail')}
           </span>
           <div style={{ flex: 1, height: 1, background: 'var(--border-subtle)' }} />
         </div>
@@ -177,7 +179,7 @@ export default function LoginPage() {
               fontFamily: 'var(--font-body)',
               marginBottom: '4px',
             }}>
-              Check your inbox
+              {t('checkInbox')}
             </div>
             <div style={{
               fontSize: '12px',
@@ -185,8 +187,10 @@ export default function LoginPage() {
               fontFamily: 'var(--font-body)',
               lineHeight: 1.5,
             }}>
-              We sent a magic link to <strong>{email}</strong>.<br />
-              Click it to sign in — no password needed.
+              {t.rich('checkInboxDetail', {
+                email,
+                b: (chunks) => <strong>{chunks}</strong>,
+              })}
             </div>
           </div>
         ) : (
@@ -201,14 +205,14 @@ export default function LoginPage() {
               letterSpacing: '0.06em',
               textTransform: 'uppercase',
             }}>
-              Email address
+              {t('emailLabel')}
             </label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
+              placeholder={t('emailPlaceholder')}
               style={{
                 width: '100%',
                 padding: '10px 12px',
@@ -232,7 +236,7 @@ export default function LoginPage() {
                 fontFamily: 'var(--font-body)',
                 marginBottom: '8px',
               }}>
-                {errorMsg || 'Something went wrong. Try again.'}
+                {errorMsg || t('errorFallback')}
               </div>
             )}
 
@@ -255,7 +259,7 @@ export default function LoginPage() {
                 letterSpacing: '0.02em',
               }}
             >
-              {status === 'sending' ? 'Sending…' : 'Send Magic Link'}
+              {status === 'sending' ? t('sending') : t('sendMagicLink')}
             </button>
           </form>
         )}
@@ -269,8 +273,7 @@ export default function LoginPage() {
           textAlign: 'center',
           lineHeight: 1.5,
         }}>
-          By signing in you agree to the GeoWire Terms of Service.
-          <br />No password required — we use secure magic links.
+          {t('footerNote')}
         </p>
       </div>
     </div>

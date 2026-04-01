@@ -1,7 +1,11 @@
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { NavbarUserMenu } from './NavbarUserMenu';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 export function Navbar() {
+  const t = useTranslations('nav');
+
   return (
     <nav
       style={{
@@ -24,14 +28,12 @@ export function Navbar() {
 
       {/* Nav Links */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <Link href="/en/dashboard" className="gw-nav-link">Dashboard</Link>
-        <Link href="/en/analysis" className="gw-nav-link">Analysis</Link>
-        <Link href="/en/calculator" className="gw-nav-link">Calculator</Link>
+        <Link href="/en/dashboard" className="gw-nav-link">{t('dashboard')}</Link>
+        <Link href="/en/analysis" className="gw-nav-link">{t('analysis')}</Link>
+        <Link href="/en/calculator" className="gw-nav-link">{t('calculator')}</Link>
 
-        {/* Language placeholder */}
-        <span className="gw-lang-badge">
-          🇺🇸 English
-        </span>
+        {/* Language switcher — replaces static "🇺🇸 English" placeholder */}
+        <LanguageSwitcher />
 
         {/* Auth state — client component */}
         <NavbarUserMenu />

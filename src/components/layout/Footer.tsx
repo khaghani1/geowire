@@ -1,6 +1,9 @@
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 export function Footer() {
+  const t = useTranslations('footer');
+
   return (
     <footer
       style={{
@@ -17,15 +20,15 @@ export function Footer() {
         fontFamily: 'var(--font-body)',
       }}
     >
-      <span>GeoWire &copy; 2026</span>
+      <span>{t('copyright')}</span>
       <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-        <Link href="/en/about" className="gw-footer-link">About</Link>
+        <Link href="/en/about" className="gw-footer-link">{t('about')}</Link>
         <Separator />
-        <Link href="/en/methodology" className="gw-footer-link">Methodology</Link>
+        <Link href="/en/methodology" className="gw-footer-link">{t('methodology')}</Link>
         <Separator />
-        <span style={{ opacity: 0.5, cursor: 'default' }}>API (coming soon)</span>
+        <span style={{ opacity: 0.5, cursor: 'default' }}>{t('apiComingSoon')}</span>
         <Separator />
-        <Link href="/en/privacy" className="gw-footer-link">Privacy</Link>
+        <Link href="/en/privacy" className="gw-footer-link">{t('privacy')}</Link>
       </div>
     </footer>
   );
