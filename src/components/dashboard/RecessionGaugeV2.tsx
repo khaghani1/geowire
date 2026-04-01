@@ -3,20 +3,20 @@
 /**
  * RecessionGaugeV2
  *
- * ECharts-based gauge — optional enhancement alongside the SVG RecessionGauge.
- * Wrap at call-site with an error boundary; on failure the original gauge shows.
+ * ECharts arc gauge — optional enhancement alongside the SVG RecessionGauge.
+ * Rendered only on the client via next/dynamic (ssr:false).
+ * If it crashes, the ChartErrorBoundary in dashboard/page.tsx catches it.
  *
- * Props mirror RecessionGauge for easy drop-in pairing.
- *
- * GeoWire palette:
- *   Low      0–30%   → green  #00C853
- *   Moderate 30–55%  → amber  #FFD600
- *   Elevated 55–75%  → orange #FF6D00
- *   Severe   75–100% → red    #FF1744
+ * GeoWire color zones:
+ *   0–30  % → green  #00C853
+ *   30–55 % → amber  #FFD600
+ *   55–75 % → orange #FF6D00
+ *   75+   % → red    #FF1744
  */
 
 import dynamic from 'next/dynamic';
 import { useTranslations } from 'next-intl';
+import ReactECharts from 'echarts-for-react';
 
 export interface RecessionGaugeV2Props {
   probability: number;
@@ -33,12 +33,9 @@ function gaugeColor(prob: number): string {
   return '#FF1744';
 }
 
-// ─── Inner chart (browser-only) ────────────────────────────────────────────────
+// ─── Inner chart (always client-side) ─────────────────────────────────────────
 function RecessionGaugeV2Inner({ probability, signal, confidence, isLoading }: RecessionGaugeV2Props) {
   const t = useTranslations('gaugeV2');
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const ReactECharts = require('echarts-for-react').default;
-
   const color = gaugeColor(probability);
 
   const option = {
@@ -72,15 +69,12 @@ function RecessionGaugeV2Inner({ probability, signal, confidence, isLoading }: R
           distance: 20,
           color: 'rgba(255,255,255,0.35)',
           fontSize: 9,
-          fontFamily: 'var(--font-data, monospace)',
-          formatter: (v: number) => `${v}`,
         },
         anchor: { show: false },
         title: {
           show: true,
           offsetCenter: [0, '-18%'],
           fontSize: 9,
-          fontFamily: 'var(--font-body, sans-serif)',
           color: 'rgba(255,255,255,0.45)',
           formatter: t('centerLabel'),
         },
@@ -91,7 +85,6 @@ function RecessionGaugeV2Inner({ probability, signal, confidence, isLoading }: R
           offsetCenter: [0, '20%'],
           fontSize: 36,
           fontWeight: 700,
-          fontFamily: 'var(--font-data, monospace)',
           color,
           formatter: '{value}%',
         },
@@ -109,17 +102,14 @@ function RecessionGaugeV2Inner({ probability, signal, confidence, isLoading }: R
         option={option}
         style={{ height: 220, width: '100%' }}
         opts={{ renderer: 'svg' }}
-        theme={undefined}
       />
-      {/* Signal + Confidence row */}
       <div style={{
         display: 'flex',
         justifyContent: 'center',
         gap: '16px',
         marginTop: '-8px',
         fontSize: '11px',
-        fontFamily: 'var(--font-body)',
-        color: 'var(--text-secondary)',
+        color: 'rgba(255,255,255,0.45)',
       }}>
         <span style={{ color, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
           {signal}
@@ -130,18 +120,18 @@ function RecessionGaugeV2Inner({ probability, signal, confidence, isLoading }: R
   );
 }
 
-// ─── Fallback shown while loading ──────────────────────────────────────────────
+// ─── Skeleton ──────────────────────────────────────────────────────────────────
 function GaugeSkeleton() {
   return (
     <div style={{ height: 268, padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-      <div style={{ width: 160, height: 12, borderRadius: 4, background: 'var(--bg-tertiary)', opacity: 0.5 }} />
-      <div style={{ flex: 1, borderRadius: '50%', background: 'var(--bg-tertiary)', opacity: 0.15, margin: '0 auto', aspectRatio: '1' }} />
+      <div style={{ width: 160, height: 12, borderRadius: 4, background: 'rgba(255,255,255,0.06)' }} />
+      <div style={{ flex: 1, background: 'rgba(255,255,255,0.04)', borderRadius: '50%', margin: '0 auto', aspectRatio: '1' }} />
     </div>
   );
 }
 
-// ─── Export wrapped in dynamic (ssr: false) ─────────────────────────────────────
+// ─── Export — dynamic(ssr:false) ───────────────────────────────────────────────
 export const RecessionGaugeV2 = dynamic(
-  () => Promise.resolve(RecessionGaugeV2Inner),
-  { ssr: false, loading: () => <GaugeSkeleton /> }
+  () => Promise.resolve({ default: RecessionGaugeV2Inner }),
+  { ssr: false, loading: () => <GaugeSkeleton /> },
 );

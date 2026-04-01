@@ -17,6 +17,7 @@ import { RecessionHistoryChart } from '@/components/dashboard/RecessionHistoryCh
 import { RecessionGaugeV2 } from '@/components/dashboard/RecessionGaugeV2';
 import { OilCascadeSankey } from '@/components/dashboard/OilCascadeSankey';
 import { HormuzMap } from '@/components/dashboard/HormuzMap';
+import { ChartErrorBoundary } from '@/components/dashboard/ChartErrorBoundary';
 
 // ─── Quick Action IDs (labels & descriptions come from en.json) ────────────────
 
@@ -287,7 +288,9 @@ export default function DashboardPage() {
 
             {/* Recession History chart */}
             <GlassCard>
-              <RecessionHistoryChart />
+              <ChartErrorBoundary label="Recession History">
+                <RecessionHistoryChart />
+              </ChartErrorBoundary>
             </GlassCard>
           </div>
 
@@ -296,12 +299,14 @@ export default function DashboardPage() {
 
             {/* ECharts gauge (enhancement) */}
             <GlassCard>
-              <RecessionGaugeV2
-                probability={probability}
-                signal={signal}
-                confidence={confidence}
-                isLoading={isScoreLoading}
-              />
+              <ChartErrorBoundary label="Recession Gauge V2">
+                <RecessionGaugeV2
+                  probability={probability}
+                  signal={signal}
+                  confidence={confidence}
+                  isLoading={isScoreLoading}
+                />
+              </ChartErrorBoundary>
             </GlassCard>
 
             {/* Model breakdown */}
@@ -339,12 +344,16 @@ export default function DashboardPage() {
 
           {/* Oil Cascade Sankey */}
           <GlassCard>
-            <OilCascadeSankey />
+            <ChartErrorBoundary label="Oil Cascade Sankey">
+              <OilCascadeSankey />
+            </ChartErrorBoundary>
           </GlassCard>
 
           {/* Hormuz Map (hidden by default — Show Map toggle inside) */}
           <GlassCard>
-            <HormuzMap />
+            <ChartErrorBoundary label="Hormuz Map">
+              <HormuzMap />
+            </ChartErrorBoundary>
           </GlassCard>
         </div>
 
