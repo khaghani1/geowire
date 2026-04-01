@@ -1,277 +1,215 @@
 'use client';
 
-import { Suspense, useState, useEffect } from 'react';
+/**
+ * Login page — magic link only.
+ *
+ * Google OAuth is intentionally omitted until OAuth credentials are
+ * configured in Supabase. All UI strings are hardcoded (no next-intl
+ * dependency) so the page never crashes due to missing translations.
+ *
+ * useSearchParams() is called directly in the page component — this is
+ * the correct pattern for a 'use client' page in Next.js App Router.
+ * Do NOT extract it into a sub-component wrapped in Suspense; that
+ * pattern causes React 19 to unmount the entire tree on this route.
+ */
+
+import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useTranslations } from 'next-intl';
 import { createClient } from '@/lib/supabase/client';
 
-// ─── useSearchParams() must be inside a Suspense boundary in App Router ────────
-
-function LoginForm() {
+export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const t = useTranslations('login');
   const next = searchParams.get('next') ?? '/en/dashboard';
 
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
-  const [oauthLoading, setOauthLoading] = useState(false);
 
-  // If already logged in, redirect immediately
+  // Redirect already-authenticated users
   useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) router.replace(next);
-    });
+    createClient()
+      .auth.getUser()
+      .then(({ data }) => { if (data.user) router.replace(next); })
+      .catch(() => { /* env vars absent in dev — ignore */ });
   }, [router, next]);
 
-  // ── Magic link ──────────────────────────────────────────────────────────────
-  async function handleMagicLink(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email.trim()) return;
-
+    const trimmed = email.trim().toLowerCase();
+    if (!trimmed) return;
     setStatus('sending');
     setErrorMsg('');
-
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithOtp({
-      email: email.trim().toLowerCase(),
-      options: {
-        emailRedirectTo: `${window.location.origin}/en/auth/callback?next=${encodeURIComponent(next)}`,
-      },
-    });
-
-    if (error) {
-      setStatus('error');
-      setErrorMsg(error.message);
-    } else {
+    try {
+      const { error } = await createClient().auth.signInWithOtp({
+        email: trimmed,
+        options: {
+          emailRedirectTo: `${window.location.origin}/en/auth/callback?next=${encodeURIComponent(next)}`,
+        },
+      });
+      if (error) throw error;
       setStatus('sent');
+    } catch (err: unknown) {
+      setStatus('error');
+      setErrorMsg(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
     }
   }
 
-  // ── Google OAuth ────────────────────────────────────────────────────────────
-  async function handleGoogle() {
-    setOauthLoading(true);
-    const supabase = createClient();
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/en/auth/callback?next=${encodeURIComponent(next)}`,
-      },
-    });
-  }
-
-  return (
-    <div style={{
-      width: '100%',
-      maxWidth: 400,
-      background: 'var(--bg-secondary)',
-      border: '1px solid var(--border-subtle)',
-      borderRadius: '16px',
-      padding: '36px 32px',
-      boxShadow: '0 24px 64px rgba(0,0,0,0.5)',
-    }}>
-
-      {/* Logo + wordmark */}
-      <div style={{ textAlign: 'center', marginBottom: '28px' }}>
-        <div style={{ fontSize: '28px', marginBottom: '8px' }}>📡</div>
-        <div style={{
-          fontFamily: 'var(--font-heading)',
-          fontSize: '22px',
-          fontWeight: 700,
-          color: 'var(--text-primary)',
-          letterSpacing: '-0.02em',
-        }}>
-          GeoWire
-        </div>
-        <div style={{
-          fontSize: '13px',
-          color: 'var(--text-secondary)',
-          fontFamily: 'var(--font-body)',
-          marginTop: '4px',
-        }}>
-          {t('tagline')}
-        </div>
-      </div>
-
-      {/* Heading */}
-      <h1 style={{
-        fontFamily: 'var(--font-heading)',
-        fontSize: '17px',
-        fontWeight: 600,
-        color: 'var(--text-primary)',
-        marginBottom: '20px',
-        textAlign: 'center',
-      }}>
-        {t('heading')}
-      </h1>
-
-      {/* Google OAuth */}
-      <button
-        type="button"
-        disabled={oauthLoading}
-        onClick={handleGoogle}
-        style={{
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '10px',
-          padding: '10px 16px',
-          borderRadius: '8px',
-          background: 'var(--bg-tertiary)',
-          border: '1px solid var(--border-medium)',
-          color: 'var(--text-primary)',
-          fontSize: '14px',
-          fontWeight: 500,
-          fontFamily: 'var(--font-body)',
-          cursor: oauthLoading ? 'not-allowed' : 'pointer',
-          opacity: oauthLoading ? 0.6 : 1,
-          transition: 'opacity 0.15s',
-          marginBottom: '16px',
-        }}
-      >
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615Z" fill="#4285F4"/>
-          <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18Z" fill="#34A853"/>
-          <path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332Z" fill="#FBBC05"/>
-          <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58Z" fill="#EA4335"/>
-        </svg>
-        {oauthLoading ? t('redirecting') : t('continueWithGoogle')}
-      </button>
-
-      {/* Divider */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-        <div style={{ flex: 1, height: 1, background: 'var(--border-subtle)' }} />
-        <span style={{ fontSize: '12px', color: 'var(--text-secondary)', fontFamily: 'var(--font-body)' }}>
-          {t('orContinueWithEmail')}
-        </span>
-        <div style={{ flex: 1, height: 1, background: 'var(--border-subtle)' }} />
-      </div>
-
-      {/* Magic link form / success state */}
-      {status === 'sent' ? (
-        <div style={{
-          textAlign: 'center',
-          padding: '16px',
-          borderRadius: '8px',
-          background: 'rgba(0,200,83,0.08)',
-          border: '1px solid rgba(0,200,83,0.2)',
-        }}>
-          <div style={{ fontSize: '24px', marginBottom: '8px' }}>✉️</div>
-          <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--green)', fontFamily: 'var(--font-body)', marginBottom: '4px' }}>
-            {t('checkInbox')}
-          </div>
-          <div style={{ fontSize: '12px', color: 'var(--text-secondary)', fontFamily: 'var(--font-body)', lineHeight: 1.5 }}>
-            {t.rich('checkInboxDetail', {
-              email,
-              b: (chunks) => <strong>{chunks}</strong>,
-            })}
-          </div>
-        </div>
-      ) : (
-        <form onSubmit={handleMagicLink}>
-          <label style={{
-            display: 'block',
-            fontSize: '12px',
-            fontWeight: 600,
-            color: 'var(--text-secondary)',
-            fontFamily: 'var(--font-body)',
-            marginBottom: '6px',
-            letterSpacing: '0.06em',
-            textTransform: 'uppercase',
-          }}>
-            {t('emailLabel')}
-          </label>
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder={t('emailPlaceholder')}
-            style={{
-              width: '100%',
-              padding: '10px 12px',
-              borderRadius: '8px',
-              background: 'var(--bg-tertiary)',
-              border: `1px solid ${status === 'error' ? 'var(--red)' : 'var(--border-medium)'}`,
-              color: 'var(--text-primary)',
-              fontSize: '14px',
-              fontFamily: 'var(--font-body)',
-              outline: 'none',
-              boxSizing: 'border-box',
-              marginBottom: '8px',
-            }}
-          />
-
-          {status === 'error' && (
-            <div style={{ fontSize: '12px', color: 'var(--red)', fontFamily: 'var(--font-body)', marginBottom: '8px' }}>
-              {errorMsg || t('errorFallback')}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={status === 'sending'}
-            style={{
-              width: '100%',
-              padding: '10px 16px',
-              borderRadius: '8px',
-              background: 'var(--accent)',
-              border: 'none',
-              color: '#fff',
-              fontSize: '14px',
-              fontWeight: 600,
-              fontFamily: 'var(--font-body)',
-              cursor: status === 'sending' ? 'not-allowed' : 'pointer',
-              opacity: status === 'sending' ? 0.65 : 1,
-              transition: 'opacity 0.15s',
-              letterSpacing: '0.02em',
-            }}
-          >
-            {status === 'sending' ? t('sending') : t('sendMagicLink')}
-          </button>
-        </form>
-      )}
-
-      <p style={{
-        marginTop: '20px',
-        fontSize: '11px',
-        color: 'var(--text-secondary)',
-        fontFamily: 'var(--font-body)',
-        textAlign: 'center',
-        lineHeight: 1.5,
-      }}>
-        {t('footerNote')}
-      </p>
-    </div>
-  );
-}
-
-// ─── Page wrapper — Suspense required around useSearchParams() in App Router ───
-
-export default function LoginPage() {
-  return (
-    <div style={{
+  // ─── Styles (plain objects — no CSS variable dependency on this page) ─────────
+  const S = {
+    page: {
       minHeight: '100vh',
-      background: 'var(--bg-primary)',
+      background: '#0a0a0f',
+      backgroundImage: 'radial-gradient(ellipse 70% 55% at 50% 35%, rgba(41,121,255,0.08) 0%, transparent 70%)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       padding: '24px',
-    }}>
-      <Suspense fallback={
-        <div style={{
-          width: 400,
-          height: 460,
-          borderRadius: '16px',
-          background: 'var(--bg-secondary)',
-          border: '1px solid var(--border-subtle)',
-        }} />
-      }>
-        <LoginForm />
-      </Suspense>
+    } as React.CSSProperties,
+
+    card: {
+      width: '100%',
+      maxWidth: 400,
+      background: 'rgba(255,255,255,0.04)',
+      border: '1px solid rgba(255,255,255,0.1)',
+      borderRadius: '20px',
+      padding: '40px 36px',
+      boxShadow: '0 32px 80px rgba(0,0,0,0.7)',
+    } as React.CSSProperties,
+
+    input: {
+      display: 'block',
+      width: '100%',
+      padding: '11px 14px',
+      borderRadius: '10px',
+      background: 'rgba(255,255,255,0.06)',
+      border: `1.5px solid ${status === 'error' ? '#FF1744' : 'rgba(255,255,255,0.12)'}`,
+      color: '#ffffff',
+      fontSize: '15px',
+      outline: 'none',
+      boxSizing: 'border-box' as const,
+      marginBottom: status === 'error' ? '6px' : '16px',
+      caretColor: '#00C853',
+      fontFamily: 'inherit',
+    } as React.CSSProperties,
+
+    btn: {
+      display: 'block',
+      width: '100%',
+      padding: '12px 16px',
+      borderRadius: '10px',
+      background: status === 'sending' ? 'rgba(0,200,83,0.55)' : '#00C853',
+      border: 'none',
+      color: '#ffffff',
+      fontSize: '15px',
+      fontWeight: 700,
+      cursor: status === 'sending' ? 'not-allowed' : 'pointer',
+      boxShadow: status === 'sending' ? 'none' : '0 4px 20px rgba(0,200,83,0.25)',
+      transition: 'background 0.15s',
+      fontFamily: 'inherit',
+      letterSpacing: '0.01em',
+    } as React.CSSProperties,
+  };
+
+  return (
+    <div style={S.page}>
+      <div style={S.card}>
+
+        {/* ── Brand header ───────────────────────────────────────────────── */}
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <svg width="44" height="44" viewBox="0 0 32 32" fill="none" style={{ display: 'block', margin: '0 auto 12px' }}>
+            <rect width="32" height="32" rx="8" fill="#0a0a0f"/>
+            <rect width="32" height="32" rx="8" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="1"/>
+            <polyline points="4,24 10,14 16,18 22,8 28,12" fill="none" stroke="#2979FF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <circle cx="28" cy="12" r="2.5" fill="#FF1744"/>
+          </svg>
+          <div style={{ fontSize: '22px', fontWeight: 700, color: '#fff', letterSpacing: '-0.03em', marginBottom: '5px' }}>
+            GeoWire
+          </div>
+          <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.35)', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+            Recession Intelligence
+          </div>
+        </div>
+
+        {/* ── Heading ────────────────────────────────────────────────────── */}
+        <div style={{ textAlign: 'center', marginBottom: '28px' }}>
+          <h1 style={{ fontSize: '18px', fontWeight: 600, color: '#fff', margin: '0 0 6px', letterSpacing: '-0.02em' }}>
+            Sign in to GeoWire
+          </h1>
+          <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.45)', margin: 0, lineHeight: 1.5 }}>
+            Enter your email to receive a secure sign-in link
+          </p>
+        </div>
+
+        {/* ── Sent confirmation ───────────────────────────────────────────── */}
+        {status === 'sent' ? (
+          <div style={{
+            textAlign: 'center',
+            padding: '24px 16px',
+            borderRadius: '12px',
+            background: 'rgba(0,200,83,0.08)',
+            border: '1px solid rgba(0,200,83,0.22)',
+          }}>
+            <div style={{ fontSize: '32px', marginBottom: '10px' }}>✉️</div>
+            <div style={{ fontSize: '15px', fontWeight: 600, color: '#00C853', marginBottom: '8px' }}>
+              Check your inbox
+            </div>
+            <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.5)', lineHeight: 1.55 }}>
+              We sent a sign-in link to <strong style={{ color: 'rgba(255,255,255,0.75)' }}>{email}</strong>.
+              Click it to sign in — no password needed.
+            </div>
+          </div>
+        ) : (
+          /* ── Magic link form ─────────────────────────────────────────── */
+          <form onSubmit={handleSubmit} noValidate>
+            <label style={{
+              display: 'block',
+              fontSize: '11px',
+              fontWeight: 700,
+              color: 'rgba(255,255,255,0.45)',
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              marginBottom: '6px',
+            }}>
+              Email address
+            </label>
+
+            <input
+              type="email"
+              required
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              style={S.input}
+              onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(0,200,83,0.5)'; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = status === 'error' ? '#FF1744' : 'rgba(255,255,255,0.12)'; }}
+            />
+
+            {status === 'error' && (
+              <div style={{ fontSize: '12px', color: '#FF1744', marginBottom: '14px', lineHeight: 1.4 }}>
+                {errorMsg}
+              </div>
+            )}
+
+            <button type="submit" disabled={status === 'sending'} style={S.btn}>
+              {status === 'sending' ? 'Sending…' : 'Send Magic Link'}
+            </button>
+          </form>
+        )}
+
+        {/* ── Footer ─────────────────────────────────────────────────────── */}
+        <p style={{
+          marginTop: '20px',
+          marginBottom: 0,
+          fontSize: '12px',
+          color: 'rgba(255,255,255,0.22)',
+          textAlign: 'center',
+          lineHeight: 1.5,
+        }}>
+          No password needed — we&apos;ll email you a secure link.
+        </p>
+      </div>
     </div>
   );
 }
