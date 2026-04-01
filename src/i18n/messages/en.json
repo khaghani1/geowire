@@ -225,5 +225,43 @@
 
   "languageSwitcher": {
     "en": "🇺🇸 English"
+  },
+
+  "recessionHistory": {
+    "panelLabel": "Recession Probability — 24-Month History",
+    "xAxisLabel": "Month",
+    "yAxisLabel": "Probability (%)",
+    "tooltipLabel": "Recession Probability",
+    "recessionBandLabel": "NBER Recession",
+    "noData": "Historical data unavailable"
+  },
+
+  "gaugeV2": {
+    "panelLabel": "Recession Probability",
+    "centerLabel": "RECESSION\nPROBABILITY",
+    "fallbackMessage": "ECharts unavailable — see gauge above"
+  },
+
+  "oilSankey": {
+    "panelLabel": "Oil Cascade — Disruption Impact",
+    "toggleNormal": "Normal Flow",
+    "toggleDisrupted": "Disrupted Flow",
+    "disruptionBadge": "DISRUPTION ACTIVE",
+    "tooltipValue": "Flow: {value}",
+    "noData": "Cascade data unavailable"
+  },
+
+  "hormuzMap": {
+    "panelLabel": "Strait of Hormuz — Shipping Routes",
+    "toggleShow": "Show Map",
+    "toggleHide": "Hide Map",
+    "toggleNormal": "Normal Routes",
+    "toggleDisrupted": "Disrupted Routes",
+    "legendNormal": "Normal Route",
+    "legendDisrupted": "Diverted via Cape of Good Hope",
+    "legendBlocked": "Hormuz Strait (Blocked)",
+    "popupOutput": "Output: {output}",
+    "popupShare": "Gulf share: {share}% of global supply",
+    "loadingTiles": "Loading map…"
   }
 }

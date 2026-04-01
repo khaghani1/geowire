@@ -13,6 +13,10 @@ import { useRecessionScore } from '@/hooks/useRecessionScore';
 import { useFredSeries, buildSeriesMap } from '@/hooks/useFredSeries';
 import { useProfile } from '@/hooks/useProfile';
 import { getTierPermissions, tierLabel } from '@/lib/auth/permissions';
+import { RecessionHistoryChart } from '@/components/dashboard/RecessionHistoryChart';
+import { RecessionGaugeV2 } from '@/components/dashboard/RecessionGaugeV2';
+import { OilCascadeSankey } from '@/components/dashboard/OilCascadeSankey';
+import { HormuzMap } from '@/components/dashboard/HormuzMap';
 
 // ─── Quick Action IDs (labels & descriptions come from en.json) ────────────────
 
@@ -280,10 +284,25 @@ export default function DashboardPage() {
                 isLoading={isSeriesLoading && Object.keys(seriesMap).length === 0}
               />
             </GlassCard>
+
+            {/* Recession History chart */}
+            <GlassCard>
+              <RecessionHistoryChart />
+            </GlassCard>
           </div>
 
           {/* ── RIGHT COLUMN ───────────────────────────────────────────── */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+
+            {/* ECharts gauge (enhancement) */}
+            <GlassCard>
+              <RecessionGaugeV2
+                probability={probability}
+                signal={signal}
+                confidence={confidence}
+                isLoading={isScoreLoading}
+              />
+            </GlassCard>
 
             {/* Model breakdown */}
             <GlassCard>
@@ -313,6 +332,20 @@ export default function DashboardPage() {
               </div>
             </GlassCard>
           </div>
+        </div>
+
+        {/* ── FULL-WIDTH BOTTOM ROW ─────────────────────────────────── */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '20px' }}>
+
+          {/* Oil Cascade Sankey */}
+          <GlassCard>
+            <OilCascadeSankey />
+          </GlassCard>
+
+          {/* Hormuz Map (hidden by default — Show Map toggle inside) */}
+          <GlassCard>
+            <HormuzMap />
+          </GlassCard>
         </div>
 
         {/* Chauvet-Piger footnote (when data is loaded) */}
