@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+/* ── Design System Tokens ─────────────────────────────────────────── */
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-tertiary: #1a1a2e;
+  --bg-glass: rgba(18, 18, 26, 0.85);
+
+  --text-primary: #e4e4e7;
+  --text-secondary: #a1a1aa;
+
+  --green: #00C853;
+  --red: #FF1744;
+  --amber: #FFD600;
+  --blue: #2979FF;
+
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-medium: rgba(255, 255, 255, 0.12);
+
+  --font-heading: 'Space Grotesk', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-data: 'JetBrains Mono', monospace;
+}
+
+/* ── Theme (Tailwind v4) ──────────────────────────────────────────── */
+@theme inline {
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-tertiary: var(--bg-tertiary);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-brand-green: var(--green);
+  --color-brand-red: var(--red);
+  --color-brand-amber: var(--amber);
+  --color-brand-blue: var(--blue);
+}
+
+/* ── Base ─────────────────────────────────────────────────────────── */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  line-height: 1.2;
+}
+
+/* ── Utilities ────────────────────────────────────────────────────── */
+.data-value {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+}
+
+.glass-card {
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+}
+
+/* ── Animations ───────────────────────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.kpi-enter {
+  opacity: 0;
+  animation: fadeInUp 0.4s ease forwards;
+}
+.kpi-enter:nth-child(1) { animation-delay: 0.05s; }
+.kpi-enter:nth-child(2) { animation-delay: 0.10s; }
+.kpi-enter:nth-child(3) { animation-delay: 0.15s; }
+.kpi-enter:nth-child(4) { animation-delay: 0.20s; }
+
+@keyframes pulseIcon {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+.pulse-icon {
+  animation: pulseIcon 2s ease-in-out infinite;
+}
+
+/* ── Scrollbar ────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
