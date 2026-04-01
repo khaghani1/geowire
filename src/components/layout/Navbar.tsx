@@ -17,79 +17,21 @@ export function Navbar() {
       }}
     >
       {/* Wordmark */}
-      <Link
-        href="/en"
-        style={{
-          fontFamily: 'var(--font-heading)',
-          fontWeight: 700,
-          fontSize: '20px',
-          color: 'var(--text-primary)',
-          textDecoration: 'none',
-          letterSpacing: '-0.02em',
-        }}
-      >
+      <Link href="/en" className="gw-wordmark">
         GeoWire
       </Link>
 
       {/* Nav Links */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <NavLink href="/en/dashboard">Dashboard</NavLink>
-        <NavLink href="/en/analysis">Analysis</NavLink>
-        <NavLink href="/en/calculator">Calculator</NavLink>
+        <Link href="/en/dashboard" className="gw-nav-link">Dashboard</Link>
+        <Link href="/en/analysis" className="gw-nav-link">Analysis</Link>
+        <Link href="/en/calculator" className="gw-nav-link">Calculator</Link>
 
         {/* Language placeholder */}
-        <span
-          style={{
-            marginLeft: '8px',
-            padding: '6px 12px',
-            background: 'var(--bg-tertiary)',
-            border: '1px solid var(--border-subtle)',
-            borderRadius: '6px',
-            fontSize: '13px',
-            color: 'var(--text-secondary)',
-            cursor: 'default',
-            fontFamily: 'var(--font-body)',
-          }}
-        >
+        <span className="gw-lang-badge">
           🇺🇸 English
         </span>
       </div>
     </nav>
-  );
-}
-
-function NavLink({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <Link
-      href={href}
-      style={{
-        padding: '6px 12px',
-        borderRadius: '6px',
-        fontSize: '14px',
-        color: 'var(--text-secondary)',
-        textDecoration: 'none',
-        fontFamily: 'var(--font-body)',
-        transition: 'color 0.15s, background 0.15s',
-      }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLAnchorElement).style.color =
-          'var(--text-primary)';
-        (e.currentTarget as HTMLAnchorElement).style.background =
-          'var(--bg-tertiary)';
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLAnchorElement).style.color =
-          'var(--text-secondary)';
-        (e.currentTarget as HTMLAnchorElement).style.background = 'transparent';
-      }}
-    >
-      {children}
-    </Link>
   );
 }

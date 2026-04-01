@@ -97,6 +97,53 @@ h1, h2, h3, h4, h5, h6 {
   animation: pulseIcon 2s ease-in-out infinite;
 }
 
+/* ── Navigation Components ────────────────────────────────────────── */
+.gw-wordmark {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--text-primary);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+  transition: opacity 0.15s;
+}
+.gw-wordmark:hover { opacity: 0.85; }
+
+.gw-nav-link {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-family: var(--font-body);
+  transition: color 0.15s, background 0.15s;
+}
+.gw-nav-link:hover {
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+}
+
+.gw-lang-badge {
+  margin-left: 8px;
+  padding: 6px 12px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: default;
+  font-family: var(--font-body);
+}
+
+/* ── Footer Components ────────────────────────────────────────────── */
+.gw-footer-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 2px 4px;
+  transition: color 0.15s;
+}
+.gw-footer-link:hover { color: var(--text-primary); }
+
 /* ── Scrollbar ────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-secondary); }
