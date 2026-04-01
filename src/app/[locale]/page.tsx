@@ -9,6 +9,8 @@ import { HomeKpiCards } from '@/components/home/HomeKpiCards';
 import { HomeRecessionFactors } from '@/components/home/HomeRecessionFactors';
 import { TrustBar } from '@/components/home/TrustBar';
 import { SparklineCards } from '@/components/dashboard/SparklineCards';
+import { GlobeHero } from '@/components/homepage/GlobeHero';
+import { ChartErrorBoundary } from '@/components/dashboard/ChartErrorBoundary';
 
 // ── Static data keys (content lives in en.json) ──────────────────────────
 
@@ -43,8 +45,8 @@ export default function HomePage() {
       {/* Main Content */}
       <main style={{ flex: 1, padding: '32px 24px', maxWidth: '1280px', margin: '0 auto', width: '100%' }}>
 
-        {/* Hero — Value Proposition (above the fold, before KPIs) */}
-        <section style={{ marginBottom: '32px', textAlign: 'center' }}>
+        {/* Hero — Value Proposition */}
+        <section style={{ marginBottom: '24px', textAlign: 'center' }}>
           <h1
             style={{
               fontFamily: 'var(--font-heading)',
@@ -72,18 +74,46 @@ export default function HomePage() {
           </p>
         </section>
 
-        {/* KPI Cards — live recession probability from FRED */}
+        {/* 3D Globe — trade route arcs */}
         <section style={{ marginBottom: '32px' }}>
+          <ChartErrorBoundary label="3D Globe">
+            <GlobeHero />
+          </ChartErrorBoundary>
+        </section>
+
+        {/* Section separator */}
+        <div style={{
+          height: '1px',
+          background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.06), transparent)',
+          margin: '0 0 28px 0',
+        }} />
+
+        {/* KPI Cards — live recession probability from FRED */}
+        <section style={{ marginBottom: '28px' }}>
           <HomeKpiCards />
         </section>
 
         {/* Trust Bar — data sources & methodology */}
         <TrustBar />
 
+        {/* Section separator */}
+        <div style={{
+          height: '1px',
+          background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.06), transparent)',
+          margin: '24px 0',
+        }} />
+
         {/* Sparkline Cards — mini market charts */}
-        <section style={{ marginBottom: '32px', marginTop: '24px' }}>
+        <section style={{ marginBottom: '32px' }}>
           <SparklineCards />
         </section>
+
+        {/* Section separator */}
+        <div style={{
+          height: '1px',
+          background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.06), transparent)',
+          margin: '0 0 28px 0',
+        }} />
 
         {/* Below the Fold — 2-column layout */}
         <section

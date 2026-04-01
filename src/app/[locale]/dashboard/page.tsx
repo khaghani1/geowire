@@ -262,12 +262,12 @@ export default function DashboardPage() {
           style={{
             display: 'grid',
             gridTemplateColumns: '2fr 1fr',
-            gap: '20px',
+            gap: '16px',
             alignItems: 'start',
           }}
         >
           {/* ── LEFT COLUMN ────────────────────────────────────────────── */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
             {/* Gauge panel */}
             <GlassCard>
@@ -301,7 +301,7 @@ export default function DashboardPage() {
           </div>
 
           {/* ── RIGHT COLUMN ───────────────────────────────────────────── */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
             {/* ECharts gauge (enhancement) */}
             <GlassCard>
@@ -351,7 +351,7 @@ export default function DashboardPage() {
         </div>
 
         {/* ── FULL-WIDTH BOTTOM ROW ─────────────────────────────────── */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '20px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px' }}>
 
           {/* Oil Price Scenario Slider */}
           <GlassCard>

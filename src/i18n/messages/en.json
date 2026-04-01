@@ -471,5 +471,11 @@
     "hySpread": "HY Spread",
     "sentiment": "Consumer Sentiment",
     "sp500": "Philly Fed Leading"
+  },
+
+  "globe": {
+    "toggleNormal": "Normal Routes",
+    "toggleDisrupted": "Disrupted Routes",
+    "disruptionActive": "⚠ HORMUZ DISRUPTION"
   }
 }
