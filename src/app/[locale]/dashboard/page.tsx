@@ -31,9 +31,9 @@ interface QuickActionDef {
 }
 
 const QUICK_ACTIONS: QuickActionDef[] = [
-  { id: 'analysis',    icon: '📊', href: '#', accentColor: 'var(--accent)' },
+  { id: 'analysis',    icon: '📊', href: '/en/analysis', accentColor: 'var(--accent)' },
   { id: 'calculator', icon: '🧮', href: '#', accentColor: 'var(--amber)' },
-  { id: 'methodology',icon: '📖', href: '#', accentColor: 'var(--green)' },
+  { id: 'methodology',icon: '📖', href: '/en/about', accentColor: 'var(--green)' },
 ];
 
 // ─── Divergence Warning Banner ─────────────────────────────────────────────────

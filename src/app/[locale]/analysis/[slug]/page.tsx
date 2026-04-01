@@ -4,7 +4,6 @@ import { getArticleBySlug, getRelatedArticles, ARTICLES } from '@/lib/data/artic
 import { AlertBanner } from '@/components/layout/AlertBanner';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
-import { GlassCard } from '@/components/ui/GlassCard';
 import { ArticleDetailClient } from '@/components/analysis/ArticleDetailClient';
 
 // ─── Static params for all articles ─────────────────────────────────────────

@@ -24,11 +24,11 @@ export function Footer() {
       <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
         <Link href="/en/about" className="gw-footer-link">{t('about')}</Link>
         <Separator />
-        <Link href="/en/methodology" className="gw-footer-link">{t('methodology')}</Link>
+        <Link href="/en/about" className="gw-footer-link">{t('methodology')}</Link>
+        <Separator />
+        <Link href="/en/pricing" className="gw-footer-link">{t('pricing')}</Link>
         <Separator />
         <span style={{ opacity: 0.5, cursor: 'default' }}>{t('apiComingSoon')}</span>
-        <Separator />
-        <Link href="/en/privacy" className="gw-footer-link">{t('privacy')}</Link>
       </div>
     </footer>
   );

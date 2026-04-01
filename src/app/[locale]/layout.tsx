@@ -7,6 +7,7 @@ import { locales, type Locale } from '@/i18n/config';
 import '../globals.css';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://geowire.org'),
   title: 'GeoWire — Recession Intelligence Platform',
   description:
     'Real-time recession probability, economic indicators, and geopolitical risk intelligence.',
@@ -34,6 +35,13 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} dir="ltr" className="dark">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://basemaps.cartocdn.com" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#0a0a0f" />
+      </head>
       <body>
         <NextIntlClientProvider messages={messages}>
           <QueryProvider>{children}</QueryProvider>

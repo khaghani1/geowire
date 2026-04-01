@@ -8,7 +8,7 @@ interface ShareButtonsProps {
   slug: string;
 }
 
-export function ShareButtons({ title, slug }: ShareButtonsProps) {
+export function ShareButtons({ title, slug: _slug }: ShareButtonsProps) {
   const t = useTranslations('analysis');
   const [copied, setCopied] = useState(false);
 

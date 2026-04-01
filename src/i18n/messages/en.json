@@ -21,6 +21,7 @@
     "copyright": "GeoWire © 2026",
     "about": "About",
     "methodology": "Methodology",
+    "pricing": "Pricing",
     "apiComingSoon": "API (coming soon)",
     "privacy": "Privacy"
   },
@@ -295,5 +296,118 @@
       "supply-chain": "Supply Chain"
     },
     "noArticles": "No articles match the selected filter."
+  },
+
+  "about": {
+    "pageTitle": "About GeoWire",
+    "pageSubtitle": "How we calculate recession probability — methodology, models, and data sources.",
+    "introTitle": "Methodology",
+    "introBody": "GeoWire combines six econometric models into a single composite recession probability score. Each model captures a different dimension of macroeconomic risk — yield curve dynamics, labor market deterioration, oil price shocks, leading indicators, and credit conditions. The composite score is a weighted combination calibrated against historical NBER recession dates.",
+    "modelsTitle": "The Six Models",
+    "models": {
+      "nyFedProbit": {
+        "name": "NY Fed Probit Model",
+        "description": "A probit regression of NBER recession indicators on the Treasury 10Y-3M yield spread, based on the framework developed by Estrella and Mishkin. The model estimates the probability of recession within 12 months using the current term spread as its sole input.",
+        "citation": "Estrella, A. & Mishkin, F. S. (1998). Predicting U.S. Recessions: Financial Variables as Leading Indicators. Review of Economics and Statistics, 80(1), 45–61."
+      },
+      "sahmRule": {
+        "name": "Sahm Rule",
+        "description": "A real-time recession indicator that triggers when the three-month moving average of the national unemployment rate rises 0.50 percentage points or more above its low during the previous 12 months. The Sahm Rule has correctly identified every U.S. recession since 1970.",
+        "citation": "Sahm, C. (2019). Direct Stimulus Payments to Individuals. Brookings Hamilton Project, Policy Proposal 2019-03."
+      },
+      "hamiltonNopi": {
+        "name": "Hamilton Net Oil Price Increase (NOPI)",
+        "description": "Measures whether the current oil price exceeds its maximum over the prior 36 months. When breached, the NOPI model signals elevated recession risk based on the historical relationship between oil price shocks and economic contractions.",
+        "citation": "Hamilton, J. D. (2003). What Is an Oil Shock? Journal of Econometrics, 113(2), 363–398."
+      },
+      "phillyFedLeading": {
+        "name": "Philadelphia Fed Leading Index",
+        "description": "The Philadelphia Federal Reserve's State Leading Indicators Index (USSLIND) combines employment, housing permits, delivery times, and interest rate spread data. A sustained negative reading has historically preceded recessions by 3–6 months.",
+        "note": "Note: This is the Philadelphia Fed Leading Index (USSLIND), not the Conference Board LEI."
+      },
+      "creditSpread": {
+        "name": "Credit Spread Signal",
+        "description": "Monitors the ICE BofA US High Yield Option-Adjusted Spread (BAMLH0A0HYM2). When high-yield corporate bond spreads exceed historical thresholds, it signals rising credit stress and increased recession probability.",
+        "note": "Heuristic model based on historical observation of spread-to-recession correlation."
+      },
+      "composite": {
+        "name": "Composite GeoWire Score",
+        "description": "A proprietary weighted combination of all five models above, calibrated against historical NBER recession dates from 1970 to present. The composite applies Chauvet-Piger divergence checks and confidence intervals to produce the final recession probability displayed on the dashboard.",
+        "note": "Proprietary weighted combination. Cross-validated against FRED series RECPROUSM156N (Chauvet-Piger)."
+      }
+    },
+    "disclaimerTitle": "Important Disclaimer",
+    "disclaimerBody": "No model is perfect. Recession probability estimates are based on historical patterns that may not repeat. GeoWire provides economic intelligence for informational purposes only and does not constitute financial, investment, or trading advice. All data is sourced from the Federal Reserve Economic Data (FRED) API and is subject to revision. Past performance of any model does not guarantee future accuracy.",
+    "dataSourcesTitle": "Data Sources",
+    "dataSourcesBody": "All economic data is sourced from the FRED API maintained by the Federal Reserve Bank of St. Louis. Indicators are fetched hourly with automatic fallback to cached seed data when the API is unavailable."
+  },
+
+  "pricing": {
+    "pageTitle": "Pricing",
+    "pageSubtitle": "Start free. Upgrade when you need full model access and real-time data.",
+    "freeTier": {
+      "name": "Free",
+      "price": "$0",
+      "period": "forever",
+      "cta": "Current Plan",
+      "features": {
+        "f1": "Composite recession probability",
+        "f2": "3 of 6 models visible",
+        "f3": "10 API calls per day",
+        "f4": "Hourly data refresh",
+        "f5": "Analysis articles"
+      }
+    },
+    "proTier": {
+      "name": "Pro",
+      "price": "$49",
+      "period": "/mo",
+      "cta": "Coming Soon",
+      "features": {
+        "f1": "All 6 recession models unlocked",
+        "f2": "500 API calls per day",
+        "f3": "Real-time data refresh",
+        "f4": "CSV and JSON export",
+        "f5": "Priority support"
+      }
+    },
+    "faqTitle": "Frequently Asked Questions",
+    "faq": {
+      "q1": {
+        "question": "What data sources does GeoWire use?",
+        "answer": "All economic data comes from the FRED API maintained by the Federal Reserve Bank of St. Louis. We fetch 13 key indicators including Treasury yields, unemployment, oil prices, consumer sentiment, and credit spreads."
+      },
+      "q2": {
+        "question": "How often is the data refreshed?",
+        "answer": "Free tier data refreshes hourly. Pro tier receives real-time updates as FRED publishes new observations. Both tiers fall back to cached seed data if the FRED API is temporarily unavailable."
+      },
+      "q3": {
+        "question": "Can I use the API programmatically?",
+        "answer": "Yes. The recession-score and FRED proxy endpoints are available at /api/v1/recession-score and /api/v1/fred/[seriesId]. Free tier is limited to 10 calls per day; Pro tier allows 500."
+      },
+      "q4": {
+        "question": "What does the composite score mean?",
+        "answer": "The composite score is a weighted combination of six econometric models, calibrated against historical NBER recession dates. A score above 50% indicates that more models are signaling recession risk than not. See the About page for full methodology."
+      }
+    }
+  },
+
+  "error": {
+    "title": "Something went wrong",
+    "body": "An unexpected error occurred. Our team has been notified.",
+    "retry": "Try again",
+    "goHome": "Go to homepage"
+  },
+
+  "notFound": {
+    "title": "404 — Page Not Found",
+    "body": "The page you're looking for doesn't exist or has been moved.",
+    "goHome": "Go to homepage",
+    "goDashboard": "Go to dashboard"
+  },
+
+  "loading": {
+    "dashboard": "Loading dashboard…",
+    "analysis": "Loading analysis…"
   }
 }
