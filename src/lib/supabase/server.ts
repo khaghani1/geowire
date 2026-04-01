@@ -1,4 +1,5 @@
 import { createServerClient } from '@supabase/ssr';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 
 /**
@@ -37,10 +38,7 @@ export async function createClient() {
  * NEVER expose the service role key to the browser.
  */
 export function createAdminClient() {
-  // Dynamic import avoids bundling the service key into client chunks
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { createClient: sc } = require('@supabase/supabase-js') as typeof import('@supabase/supabase-js');
-  return sc(
+  return createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     { auth: { autoRefreshToken: false, persistSession: false } },

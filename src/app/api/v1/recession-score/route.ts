@@ -24,35 +24,41 @@ import { checkAndIncrementRateLimit } from '@/lib/auth/rateLimit';
 export async function GET() {
   try {
     // ── Rate limiting (authenticated requests only) ──────────────────────────
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    // Wrapped in try-catch so a Supabase misconfiguration or network issue
+    // never blocks the scoring engine from responding.
+    try {
+      const supabase = await createClient();
+      const { data: { user } } = await supabase.auth.getUser();
 
-    if (user) {
-      const limit = await checkAndIncrementRateLimit(user.id);
+      if (user) {
+        const limit = await checkAndIncrementRateLimit(user.id);
 
-      if (!limit.allowed) {
-        return NextResponse.json(
-          {
-            error: 'Rate limit exceeded',
-            message: `Daily limit of ${
-              limit.tier === 'free' ? 10 : 500
-            } API calls reached. Resets at ${limit.resetAt}.`,
-            resetAt: limit.resetAt,
-            tier: limit.tier,
-          },
-          {
-            status: 429,
-            headers: {
-              'X-RateLimit-Limit': limit.tier === 'free' ? '10' : '500',
-              'X-RateLimit-Remaining': '0',
-              'X-RateLimit-Reset': limit.resetAt,
-              'Retry-After': String(
-                Math.ceil((new Date(limit.resetAt).getTime() - Date.now()) / 1000),
-              ),
+        if (!limit.allowed) {
+          return NextResponse.json(
+            {
+              error: 'Rate limit exceeded',
+              message: `Daily limit of ${
+                limit.tier === 'free' ? 10 : 500
+              } API calls reached. Resets at ${limit.resetAt}.`,
+              resetAt: limit.resetAt,
+              tier: limit.tier,
             },
-          },
-        );
+            {
+              status: 429,
+              headers: {
+                'X-RateLimit-Limit': limit.tier === 'free' ? '10' : '500',
+                'X-RateLimit-Remaining': '0',
+                'X-RateLimit-Reset': limit.resetAt,
+                'Retry-After': String(
+                  Math.ceil((new Date(limit.resetAt).getTime() - Date.now()) / 1000),
+                ),
+              },
+            },
+          );
+        }
       }
+    } catch (authErr) {
+      console.warn('[api/v1/recession-score] Supabase unavailable, skipping rate limit:', authErr);
     }
 
     // ── Scoring engine ────────────────────────────────────────────────────────

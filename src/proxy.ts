@@ -33,24 +33,30 @@ export async function proxy(request: NextRequest) {
     options?: Record<string, unknown>;
   }> = [];
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll: () => request.cookies.getAll(),
-        setAll: (cookiesToSet) => {
-          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-          pendingCookies.push(...cookiesToSet);
+  // If Supabase is misconfigured or unavailable, treat the request as
+  // unauthenticated rather than crashing the proxy and returning 500 on every route.
+  let user: { id: string } | null = null;
+  try {
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll: () => request.cookies.getAll(),
+          setAll: (cookiesToSet) => {
+            cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+            pendingCookies.push(...cookiesToSet);
+          },
         },
       },
-    },
-  );
+    );
 
-  // getUser() validates + refreshes the JWT — do NOT use getSession() here
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    // getUser() validates + refreshes the JWT — do NOT use getSession() here
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch (err) {
+    console.warn('[proxy] Supabase session refresh failed — treating as unauthenticated:', err);
+  }
 
   // ── Step 2: Route protection ─────────────────────────────────────────────────
   const { pathname } = request.nextUrl;
