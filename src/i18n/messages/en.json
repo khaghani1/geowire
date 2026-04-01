@@ -85,6 +85,13 @@
       "lei": { "name": "LEI", "status": "Declining" },
       "creditSpreads": { "name": "Credit Spreads", "status": "Normal" },
       "sahmRule": { "name": "Sahm Rule", "status": "Not Triggered" }
+    },
+    "hormuzSection": {
+      "heading": "Live Strait of Hormuz Monitoring",
+      "subheading": "21 million barrels per day flow through this chokepoint — toggle to see disruption impact"
+    },
+    "whatChangedSection": {
+      "heading": "What Changed Today"
     }
   },
 
@@ -477,5 +484,46 @@
     "toggleNormal": "Normal Routes",
     "toggleDisrupted": "Disrupted Routes",
     "disruptionActive": "⚠ HORMUZ DISRUPTION"
+  },
+
+  "scenarios": {
+    "heading": "Crisis Scenarios — What Happens Next?",
+    "subheading": "Each scenario shows projected impact using Hamilton (2003) elasticity coefficients",
+    "oilRange": "Oil Range",
+    "shippingStress": "Shipping Stress",
+    "inflationImpulse": "Inflation Impulse",
+    "recessionDelta": "Recession Δ",
+    "contained": {
+      "name": "Contained Disruption",
+      "oilRange": "$85–95",
+      "shippingStress": "Low",
+      "inflationImpulse": "+0.2% CPI",
+      "recessionDelta": "+1–2pp",
+      "summary": "Hormuz remains open. Insurance premiums elevated but manageable."
+    },
+    "partial": {
+      "name": "Partial Closure",
+      "oilRange": "$110–130",
+      "shippingStress": "Moderate — rerouting via Cape",
+      "inflationImpulse": "+0.8% CPI",
+      "recessionDelta": "+5–8pp",
+      "summary": "Tankers reroute around Africa. 14-day delay adds $2–4/barrel shipping cost."
+    },
+    "fullClosure": {
+      "name": "Full Hormuz Closure",
+      "oilRange": "$140–170",
+      "shippingStress": "Severe — 21M bpd disrupted",
+      "inflationImpulse": "+1.8% CPI",
+      "recessionDelta": "+12–18pp",
+      "summary": "Global oil shock. Japan, South Korea, India face acute supply crisis."
+    },
+    "diplomatic": {
+      "name": "Diplomatic Resolution",
+      "oilRange": "$75–85",
+      "shippingStress": "None",
+      "inflationImpulse": "−0.3% CPI (relief rally)",
+      "recessionDelta": "−3–5pp",
+      "summary": "Ceasefire and de-escalation. Risk premiums unwind. Markets rally."
+    }
   }
 }

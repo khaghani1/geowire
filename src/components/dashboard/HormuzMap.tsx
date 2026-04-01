@@ -176,7 +176,7 @@ function AntPathLayer({ disrupted }: { disrupted: boolean }) {
 
 // ─── Inner map (always client-side — this file is ssr:false) ──────────────────
 
-function HormuzMapInner({ disrupted }: { disrupted: boolean }) {
+function HormuzMapInner({ disrupted, height = 320 }: { disrupted: boolean; height?: number }) {
   const t = useTranslations('hormuzMap');
 
   return (
@@ -184,7 +184,7 @@ function HormuzMapInner({ disrupted }: { disrupted: boolean }) {
       <MapContainer
         center={HORMUZ_CENTER}
         zoom={4}
-        style={{ height: 320, width: '100%', background: '#12121a' }}
+        style={{ height, width: '100%', background: '#12121a' }}
         zoomControl
         scrollWheelZoom={false}
         attributionControl={false}
@@ -336,6 +336,62 @@ function MapLegendItem({ color, label, dashed, filled, animated }: { color: stri
   );
 }
 
+// ─── Homepage variant — always visible, no show/hide toggle ───────────────────
+
+function HormuzMapHomepageInner() {
+  const t = useTranslations('hormuzMap');
+  const [disrupted, setDisrupted] = useState(false);
+
+  return (
+    <div>
+      {/* Route toggle + legend row */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '8px',
+        marginBottom: '12px',
+      }}>
+        <button
+          onClick={() => setDisrupted((d) => !d)}
+          style={{
+            padding: '6px 14px',
+            borderRadius: '6px',
+            background: disrupted ? 'rgba(255,23,68,0.12)' : 'rgba(0,200,83,0.1)',
+            border: `1px solid ${disrupted ? 'rgba(255,23,68,0.35)' : 'rgba(0,200,83,0.3)'}`,
+            color: disrupted ? '#FF1744' : '#00C853',
+            fontSize: '12px',
+            fontWeight: 600,
+            cursor: 'pointer',
+            transition: 'all 0.2s',
+            letterSpacing: '0.03em',
+          }}
+        >
+          {disrupted ? t('toggleNormal') : t('toggleDisrupted')}
+        </button>
+
+        <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
+          <MapLegendItem color="#00C853" label={t('legendNormal')} animated />
+          <MapLegendItem color="#FF1744" dashed label={t('legendDisrupted')} animated />
+          <MapLegendItem color="#FF1744" filled label={t('legendBlocked')} />
+        </div>
+      </div>
+
+      <HormuzMapInner disrupted={disrupted} height={450} />
+
+      {/* Responsive height override */}
+      <style>{`
+        @media (max-width: 768px) {
+          .hormuz-homepage-section .leaflet-container {
+            height: 300px !important;
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
+
 // ─── Skeleton ──────────────────────────────────────────────────────────────────
 function MapSkeleton() {
   return (
@@ -346,8 +402,21 @@ function MapSkeleton() {
   );
 }
 
-// ─── Export — dynamic(ssr:false) ───────────────────────────────────────────────
+function HomepageMapSkeleton() {
+  return (
+    <div style={{ height: 450, borderRadius: 8, background: 'rgba(255,255,255,0.03)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '14px' }}>Loading map…</span>
+    </div>
+  );
+}
+
+// ─── Exports — dynamic(ssr:false) ─────────────────────────────────────────────
 export const HormuzMap = dynamic(
   () => Promise.resolve({ default: HormuzMapWithToggle }),
   { ssr: false, loading: () => <MapSkeleton /> },
+);
+
+export const HormuzMapHomepage = dynamic(
+  () => Promise.resolve({ default: HormuzMapHomepageInner }),
+  { ssr: false, loading: () => <HomepageMapSkeleton /> },
 );

@@ -10,6 +10,9 @@ import { HomeRecessionFactors } from '@/components/home/HomeRecessionFactors';
 import { TrustBar } from '@/components/home/TrustBar';
 import { SparklineCards } from '@/components/dashboard/SparklineCards';
 import { GlobeHero } from '@/components/homepage/GlobeHero';
+import { ScenarioCards } from '@/components/homepage/ScenarioCards';
+import { HormuzMapHomepage } from '@/components/dashboard/HormuzMap';
+import { WhatChanged } from '@/components/dashboard/WhatChanged';
 import { ChartErrorBoundary } from '@/components/dashboard/ChartErrorBoundary';
 
 // ── Static data keys (content lives in en.json) ──────────────────────────
@@ -106,6 +109,78 @@ export default function HomePage() {
         {/* Sparkline Cards — mini market charts */}
         <section style={{ marginBottom: '32px' }}>
           <SparklineCards />
+        </section>
+
+        {/* Section separator */}
+        <div style={{
+          height: '1px',
+          background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.06), transparent)',
+          margin: '0 0 28px 0',
+        }} />
+
+        {/* Live Hormuz Map — full width, expanded, animated routes */}
+        <section className="hormuz-homepage-section" style={{ marginBottom: '32px' }}>
+          <h2 style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: '20px',
+            fontWeight: 700,
+            color: 'var(--text-primary)',
+            marginBottom: '6px',
+            letterSpacing: '-0.01em',
+            textAlign: 'center',
+          }}>
+            {t('hormuzSection.heading')}
+          </h2>
+          <p style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: '13px',
+            color: 'var(--text-secondary)',
+            textAlign: 'center',
+            marginBottom: '20px',
+            lineHeight: 1.5,
+          }}>
+            {t('hormuzSection.subheading')}
+          </p>
+          <ChartErrorBoundary label="Hormuz Map">
+            <HormuzMapHomepage />
+          </ChartErrorBoundary>
+        </section>
+
+        {/* Section separator */}
+        <div style={{
+          height: '1px',
+          background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.06), transparent)',
+          margin: '0 0 28px 0',
+        }} />
+
+        {/* Scenario Cards — 4 crisis scenarios */}
+        <section style={{ marginBottom: '32px' }}>
+          <ScenarioCards />
+        </section>
+
+        {/* Section separator */}
+        <div style={{
+          height: '1px',
+          background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.06), transparent)',
+          margin: '0 0 28px 0',
+        }} />
+
+        {/* What Changed Today */}
+        <section style={{ marginBottom: '32px' }}>
+          <h2 style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: '20px',
+            fontWeight: 700,
+            color: 'var(--text-primary)',
+            marginBottom: '16px',
+            letterSpacing: '-0.01em',
+            textAlign: 'center',
+          }}>
+            {t('whatChangedSection.heading')}
+          </h2>
+          <GlassCard style={{ maxWidth: '720px', margin: '0 auto' }}>
+            <WhatChanged />
+          </GlassCard>
         </section>
 
         {/* Section separator */}
