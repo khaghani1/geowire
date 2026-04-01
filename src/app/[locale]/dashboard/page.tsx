@@ -19,6 +19,8 @@ import { OilCascadeSankey } from '@/components/dashboard/OilCascadeSankey';
 import { HormuzMap } from '@/components/dashboard/HormuzMap';
 import { ChartErrorBoundary } from '@/components/dashboard/ChartErrorBoundary';
 import { WhatChanged } from '@/components/dashboard/WhatChanged';
+import { ScenarioSlider } from '@/components/dashboard/ScenarioSlider';
+import { SparklineCards } from '@/components/dashboard/SparklineCards';
 
 // ─── Quick Action IDs (labels & descriptions come from en.json) ────────────────
 
@@ -279,6 +281,9 @@ export default function DashboardPage() {
               />
             </GlassCard>
 
+            {/* Sparkline Cards — mini charts row */}
+            <SparklineCards />
+
             {/* Key Indicators table */}
             <GlassCard>
               <IndicatorTable
@@ -347,6 +352,11 @@ export default function DashboardPage() {
 
         {/* ── FULL-WIDTH BOTTOM ROW ─────────────────────────────────── */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '20px' }}>
+
+          {/* Oil Price Scenario Slider */}
+          <GlassCard>
+            <ScenarioSlider />
+          </GlassCard>
 
           {/* Oil Cascade Sankey */}
           <GlassCard>

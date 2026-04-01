@@ -430,5 +430,46 @@
     "badge": "Last 24h",
     "noChanges": "No significant changes detected in the last 24 hours.",
     "latestLabel": "Latest"
+  },
+
+  "scenario": {
+    "title": "Oil Price Scenario Modeler",
+    "interactive": "Interactive",
+    "perBarrel": "per barrel (WTI)",
+    "sliderLabel": "Drag to model oil price scenarios from $60 to $180",
+    "presets": {
+      "current": "Current ($89)",
+      "partial": "Hormuz Partial ($120)",
+      "closed": "Hormuz Closed ($150)",
+      "escalation": "Full Escalation ($180)"
+    },
+    "cascade": {
+      "gasoline": "Gasoline",
+      "diesel": "Diesel",
+      "jetFuel": "Jet Fuel",
+      "shipping": "Shipping",
+      "foodPrices": "Food Prices",
+      "cpiImpact": "CPI Impact",
+      "gdpImpact": "GDP Impact"
+    },
+    "cascadeContext": {
+      "gasoline": "Retail pump prices",
+      "diesel": "Freight & logistics",
+      "jetFuel": "Airline costs",
+      "shipping": "Container rates",
+      "foodPrices": "Grocery basket",
+      "cpiImpact": "Consumer inflation",
+      "gdpImpact": "Economic output"
+    },
+    "summary": "At ${price} oil: recession probability increases by ~{pp} percentage points"
+  },
+
+  "sparklines": {
+    "wti": "WTI Crude",
+    "spread": "10Y-3M Spread",
+    "unemployment": "Unemployment",
+    "hySpread": "HY Spread",
+    "sentiment": "Consumer Sentiment",
+    "sp500": "Philly Fed Leading"
   }
 }

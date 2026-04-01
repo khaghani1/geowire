@@ -8,6 +8,7 @@ import type { Severity } from '@/components/ui/SeverityBadge';
 import { HomeKpiCards } from '@/components/home/HomeKpiCards';
 import { HomeRecessionFactors } from '@/components/home/HomeRecessionFactors';
 import { TrustBar } from '@/components/home/TrustBar';
+import { SparklineCards } from '@/components/dashboard/SparklineCards';
 
 // ── Static data keys (content lives in en.json) ──────────────────────────
 
@@ -78,6 +79,11 @@ export default function HomePage() {
 
         {/* Trust Bar — data sources & methodology */}
         <TrustBar />
+
+        {/* Sparkline Cards — mini market charts */}
+        <section style={{ marginBottom: '32px', marginTop: '24px' }}>
+          <SparklineCards />
+        </section>
 
         {/* Below the Fold — 2-column layout */}
         <section
