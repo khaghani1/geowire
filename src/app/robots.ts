@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/auth/'],
       },
     ],
-    sitemap: 'https://geowire.org/sitemap.xml',
+    sitemap: 'https://www.geowire.org/sitemap.xml',
   };
 }

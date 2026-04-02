@@ -75,7 +75,22 @@ export default function NotFoundPage() {
                 textDecoration: 'none',
               }}
             >
-              Go to dashboard
+              Dashboard
+            </Link>
+            <Link
+              href="/en/analysis"
+              style={{
+                padding: '10px 24px',
+                borderRadius: '8px',
+                border: '1px solid rgba(255,255,255,0.1)',
+                background: 'rgba(255,255,255,0.04)',
+                color: 'rgba(255,255,255,0.6)',
+                fontSize: '14px',
+                fontWeight: 500,
+                textDecoration: 'none',
+              }}
+            >
+              Analysis
             </Link>
           </div>
         </div>
