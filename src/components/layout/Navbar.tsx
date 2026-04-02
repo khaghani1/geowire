@@ -30,6 +30,7 @@ export function Navbar() {
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
         <Link href="/en/dashboard" className="gw-nav-link">{t('dashboard')}</Link>
         <Link href="/en/analysis" className="gw-nav-link">{t('analysis')}</Link>
+        <Link href="/en/commodities" className="gw-nav-link">{t('commodities')}</Link>
         <Link href="/en/about" className="gw-nav-link">{t('methodology')}</Link>
         <Link href="/en/pricing" className="gw-nav-link">{t('pricing')}</Link>
 

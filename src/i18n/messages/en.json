@@ -7,6 +7,7 @@
   "nav": {
     "dashboard": "Dashboard",
     "analysis": "Analysis",
+    "commodities": "Commodities",
     "methodology": "Methodology",
     "pricing": "Pricing",
     "signIn": "Sign In",
@@ -290,6 +291,7 @@
     "filterRecessionRisk": "Recession Risk",
     "filterEnergy": "Energy",
     "filterSupplyChain": "Supply Chain",
+    "filterTechnology": "Technology",
     "readMore": "Read analysis →",
     "readingTime": "{minutes} min read",
     "publishedOn": "Published {date}",
@@ -310,9 +312,25 @@
     "topics": {
       "recession-risk": "Recession Risk",
       "energy": "Energy",
-      "supply-chain": "Supply Chain"
+      "supply-chain": "Supply Chain",
+      "technology": "Technology"
     },
     "noArticles": "No articles match the selected filter."
+  },
+
+  "commodities": {
+    "title": "Commodity Explorer",
+    "subtitle": "Track global supply chains, disruptions, and economic transmission",
+    "search": "Search commodities...",
+    "status": "Status",
+    "topProducers": "Top Producers",
+    "tradeRoute": "Primary Trade Route",
+    "cpiImpact": "CPI/PPI Impact",
+    "viewDetails": "View Details",
+    "disrupted": "DISRUPTED",
+    "normal": "NORMAL",
+    "elevated": "ELEVATED",
+    "critical": "CRITICAL"
   },
 
   "about": {

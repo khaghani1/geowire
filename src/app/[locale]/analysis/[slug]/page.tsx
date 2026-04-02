@@ -24,8 +24,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!article) return { title: 'Not Found — GeoWire' };
 
   return {
-    title: `${article.title} — GeoWire Analysis`,
-    description: article.excerpt,
+    title: article.seoTitle || `${article.title} — GeoWire Analysis`,
+    description: article.seoDescription || article.excerpt,
     openGraph: {
       title: article.title,
       description: article.excerpt,
@@ -50,8 +50,9 @@ export default async function ArticleDetailPage({ params }: PageProps) {
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
     headline: article.title,
-    description: article.excerpt,
+    description: article.seoDescription || article.excerpt,
     datePublished: article.date,
+    dateModified: article.updatedAt || article.date,
     author: {
       '@type': 'Organization',
       name: article.author,

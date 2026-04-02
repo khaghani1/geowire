@@ -15,6 +15,7 @@ const FILTERS: { key: FilterValue; labelKey: string }[] = [
   { key: 'recession-risk', labelKey: 'filterRecessionRisk' },
   { key: 'energy', labelKey: 'filterEnergy' },
   { key: 'supply-chain', labelKey: 'filterSupplyChain' },
+  { key: 'technology', labelKey: 'filterTechnology' },
 ];
 
 export function TopicFilter({ onFilterChange }: TopicFilterProps) {

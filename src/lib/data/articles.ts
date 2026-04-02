@@ -5,7 +5,7 @@
  * Content sections drive both the rendered article and the auto-generated TOC.
  */
 
-export type ArticleTopic = 'recession-risk' | 'energy' | 'supply-chain';
+export type ArticleTopic = 'recession-risk' | 'energy' | 'supply-chain' | 'technology';
 export type ArticleSeverity = 'low' | 'medium' | 'elevated' | 'high' | 'critical';
 
 export interface ArticleSection {
@@ -21,69 +21,88 @@ export interface Article {
   excerpt: string;
   author: string;
   date: string; // ISO date
+  updatedAt: string; // ISO date
   readingTime: number; // minutes
   topics: ArticleTopic[];
   severity: ArticleSeverity;
+  seoTitle: string;
+  seoDescription: string;
   heroImage?: string;
   sections: ArticleSection[];
 }
 
-// ─── Article 1: Strait of Hormuz ─────────────────────────────────────────────
+// ─── Article 1: Fortress Americas Industrial Cascade ────────────────────────
 
-const straitOfHormuz: Article = {
-  slug: 'strait-of-hormuz-recession',
-  title: 'How the Strait of Hormuz Crisis Feeds a Global Recession',
-  subtitle: 'Tracing the elasticity chain from crude oil to GDP contraction',
+const fortressAmericas: Article = {
+  slug: 'fortress-americas-industrial-cascade',
+  title: 'The Industrial Cascade: How War, Tariffs, and Oil Are Rewriting the Global Map',
+  subtitle: 'Israeli strikes, Iranian retaliation, and Trump tariffs are creating a hemispheric industrial moat',
   excerpt:
-    'A near-total shutdown of the world\'s most critical oil chokepoint has set off a cascade of price shocks. We trace the transmission from crude to consumer prices using measured elasticity coefficients.',
+    'Israeli strikes on Iranian steel, Trump\'s 50% tariffs, and $105 oil are creating a cascade that enriches US industrial producers while devastating global supply chains.',
   author: 'GeoWire Intelligence Desk',
-  date: '2026-03-28',
-  readingTime: 6,
-  topics: ['energy', 'recession-risk'],
-  severity: 'high',
+  date: '2026-03-30',
+  updatedAt: '2026-03-31',
+  readingTime: 7,
+  topics: ['recession-risk', 'supply-chain', 'energy'],
+  severity: 'critical',
+  seoTitle: 'The Industrial Cascade: War, Tariffs, and Oil Rewriting the Global Map — GeoWire',
+  seoDescription: 'Israeli strikes on Iranian steel, Trump\'s 50% tariffs, and $105 oil are creating a cascade that enriches US industrial producers while devastating global supply chains.',
   sections: [
     {
-      id: 'the-chokepoint',
-      heading: 'The Chokepoint That Moves 21 Million Barrels a Day',
-      body: `The Strait of Hormuz is a 21-mile-wide passage between Iran and Oman through which roughly 21 million barrels of crude oil transit daily — approximately 20% of global supply. When Iran effectively closed the strait in late February 2026, the immediate result was a supply shock without modern precedent. Within 48 hours, Brent crude surged past $112 per barrel from a pre-crisis level of $68.
+      id: 'steel-strikes',
+      heading: 'The Strikes That Broke Iran\'s Steel Spine',
+      body: `On March 27, 2026, Israeli Air Force strikes hit the Mobarakeh Steel Complex in Isfahan — Iran's largest steel facility with 7.1 million tonnes of annual capacity, roughly 25% of total Iranian output. Within 48 hours, Khouzestan Steel Company (3.6 million tonnes annual capacity) announced an indefinite shutdown, citing damage to connected power infrastructure and employee evacuation orders. Combined, these two facilities represent approximately 33-45% of Iran's entire steel production capability.
 
-What makes this crisis different from previous oil shocks is the combination of magnitude and duration. The 1973 Arab oil embargo reduced global supply by roughly 7%. The current Hormuz closure has removed nearly 20% of seaborne oil from the market. Lloyd's of London suspended war-risk insurance coverage for Hormuz transit on March 1, effectively making the closure total even for vessels willing to risk passage.`,
+The strikes were precision operations targeting blast furnaces and continuous casting lines — the components with the longest replacement timelines. Industry analysts at Mining Technology estimate 18-24 months minimum to restore Mobarakeh to operational capacity, assuming uninterrupted reconstruction and sanctions relief on critical equipment. Neither assumption is plausible in the current environment.
+
+Iran's steel sector had been the country's second-largest non-oil export earner, generating roughly $4 billion annually in shipments to Turkey, China, the UAE, and Iraq. That revenue stream has been severed. Turkey, which imported approximately 2.8 million tonnes of Iranian semi-finished steel in 2025, is already scrambling for alternative suppliers — driving Turkish rebar futures up 18% in the week following the strikes.`,
     },
     {
-      id: 'elasticity-chain',
-      heading: 'The Elasticity Chain: From Crude to Consumer',
-      body: `The economic damage from an oil shock does not stay contained to energy markets. It cascades through the economy via a measurable chain of price elasticities — coefficients that quantify how a price change in one commodity transmits to another.
+      id: 'iranian-retaliation',
+      heading: 'Iran\'s IRGC Strikes Back: The Gulf Aluminum Crisis',
+      body: `Iran's Islamic Revolutionary Guard Corps responded with calculated precision, targeting the Gulf's aluminum sector rather than its oil infrastructure. On March 28, drone and ballistic missile strikes hit Emirates Global Aluminium (EGA) at Al Taweelah in Abu Dhabi — the world's largest single-site aluminum smelter with 2.4 million tonnes of annual capacity, roughly 4% of global primary aluminum production.
 
-The oil-to-gasoline elasticity is 1.12, meaning a 10% increase in crude oil prices produces an 11.2% increase in gasoline prices. This slightly greater-than-one elasticity reflects the refining margin expansion that occurs during supply crunches, as refiners pass through costs plus additional margin.
+The following day, Aluminium Bahrain (Alba) — with 1.62 million tonnes of capacity, making it the fifth-largest smelter globally — declared force majeure after sustaining damage to its potline power systems. Aluminum smelting requires continuous electrical current; even a brief interruption causes the electrolytic cells to "freeze," requiring months of rebuild work per potline.
 
-The oil-to-diesel elasticity is 1.08. Diesel is the fuel of commerce — it powers trucks, trains, and shipping vessels. When diesel prices rise, the cost of moving every physical good in the economy increases. The current $112/bbl Brent price has pushed US average diesel to $5.18/gallon, up 38% from pre-crisis levels.
-
-The shipping-to-food elasticity is 0.38. This means a 10% increase in shipping costs produces a 3.8% increase in food prices. With container shipping rerouting via the Cape of Good Hope — adding 14 days and roughly $800,000 per voyage — food price inflation is baked in with a 3-6 month lag.
-
-The energy-to-CPI elasticity is 0.21. For every 10% increase in energy costs, the Consumer Price Index rises by 2.1%. With energy costs up roughly 45% across the board, the implied CPI impact is approximately 9.5 percentage points of additional inflation pressure — on top of whatever baseline inflation existed before the crisis.`,
+The combined 4+ million tonnes of Gulf aluminum capacity now at risk represents a significant fraction of global supply. The LME three-month aluminum price surged through $3,200/tonne on the news, up from $2,480 pre-crisis. European auto manufacturers, who source 15-20% of their aluminum sheet from Gulf smelters, have activated force majeure provisions in supply contracts — a move that ripples through body-in-white production lines at BMW, Mercedes, and Volkswagen.`,
     },
     {
-      id: 'gdp-transmission',
-      heading: 'GDP Transmission: The -0.15 Coefficient',
-      body: `The oil-to-GDP elasticity is -0.15, derived from Hamilton's (2003) analysis of oil price shocks and economic output. A 10% increase in oil prices reduces GDP by approximately 1.5%. With Brent crude up roughly 65% from pre-crisis levels, the implied GDP drag is approximately 9.75% on an annualized basis — though the actual impact depends on duration and the degree to which alternative supply routes come online.
+      id: 'tariff-moat',
+      heading: 'The Double Moat: Tariffs Meet Supply Destruction',
+      body: `President Trump's steel and aluminum tariffs, escalated to 50% in February 2026, had already created a significant price umbrella for domestic producers. The Iran-Israel conflict has now added supply destruction on top of trade protection — creating what commodity strategists at Wood Mackenzie are calling a "double moat" for US industrial metals companies.
 
-The Federal Reserve is caught in an impossible position. War-induced supply inflation cannot be addressed with rate cuts, which would further stoke price pressures. But leaving rates elevated while GDP contracts risks deepening a recession. The March 23 emergency meeting of Fed governors acknowledged this dilemma publicly for the first time.`,
+The market response has been dramatic. Century Aluminum, the sole remaining US primary aluminum smelter operator, has seen its stock rise 167% since the tariff escalation. Nucor, the largest US steel producer, is up 41%. Alcoa has surged 124% on the combination of tariff protection and global supply disruption.
+
+This is not simply stock market speculation. US industrial utilization rates, which had been running at 74% for steel and 52% for aluminum before the tariff escalation, are now approaching 90% and 78% respectively. Domestic producers are running hot, hiring, and restarting mothballed capacity. Century Aluminum announced in mid-March that it would restart its Hawesville, Kentucky smelter — idle since 2022 — citing "unprecedented market conditions."
+
+The irony is that this industrial renaissance is built on the destruction of foreign competitors. The "Fortress Americas" thesis, popularized by Columbia University's Center on Global Energy Policy, posits that hemispheric supply chains are decoupling from Eurasian ones faster than any planned reshoring initiative could have achieved. War and tariffs are accomplishing in months what industrial policy could not in decades.`,
     },
     {
-      id: 'cape-diversion',
-      heading: 'The Cape of Good Hope Diversion',
-      body: `With Hormuz closed, oil tankers must reroute around the southern tip of Africa. This adds approximately 3,500 nautical miles and 14 days to the Asia-Europe route. The additional transit time is itself a supply constraint — tankers that could previously make 20 round-trips per year can now make only 15, effectively reducing the global tanker fleet's carrying capacity by 25%.
+      id: 'venezuela-oil',
+      heading: 'Venezuela\'s Orinoco Belt: The $105 Lifeline',
+      body: `With Brent crude above $105/barrel, Venezuela's extra-heavy Orinoco Belt crude — technically and economically marginal below $80 — has become viable. OFAC General Licenses 49 and 50A, issued in January 2026 under the Maduro-opposition rapprochement deal, opened the sector to BP, Chevron, Eni, Repsol, and Shell. Cleary Gottlieb's sanctions practice notes these licenses are "the broadest since the 2019 sanctions tightening," permitting new drilling, upgrader refurbishment, and crude export via designated intermediaries.
 
-Saudi Arabia and UAE have begun diverting approximately 3 million barrels per day through this route, but the infrastructure was never designed for this volume. Port congestion at the Cape has already added 2-3 days beyond the baseline diversion time.`,
+Venezuela's production has already crept from 780,000 bbl/day to approximately 920,000 bbl/day since the licenses took effect, with Chevron's Petroboscán and Petropiar joint ventures contributing the largest incremental volumes. The Maduro government has signaled it will fast-track environmental permits for Orinoco upgrader expansion, targeting 1.3 million bbl/day by Q4 2026.
+
+This matters because Venezuelan heavy crude is a natural substitute for Iranian crude in Asian refineries configured for sour, heavy feedstock. Supply Chain Dive reports that CNPC has already redirected three VLCC charters from the Persian Gulf to José terminal in Venezuela — a logistical shift that was unthinkable six months ago.`,
     },
     {
-      id: 'recession-probability',
-      heading: 'What This Means for Recession Probability',
-      body: `GeoWire's composite recession model currently estimates a 20.4% probability of US recession within 12 months. This figure would be significantly higher — likely above 40% — if the Hormuz closure persists beyond 90 days. The key variable is duration: historical analysis shows that oil price shocks lasting less than one quarter typically produce slowdowns rather than recessions, while shocks lasting two or more quarters have preceded every recession since 1973.
+      id: 'china-vulnerability',
+      heading: 'China\'s Triple Exposure',
+      body: `China is the most exposed major economy. Approximately 54-55% of Chinese crude imports originate from the Middle East, with 45-50% of total crude imports transiting the Strait of Hormuz. The conflict has simultaneously disrupted three of China's supply chain dependencies: oil (Hormuz transit risk), steel (loss of Iranian semi-finished imports for re-rolling), and petrochemicals (Iranian methanol and polyethylene exports halted).
 
-The Sahm Rule indicator has already risen to 0.37 — approaching the 0.50 threshold that has correctly identified every recession since 1970. The NY Fed probit model, which uses the yield curve spread, estimates an 18% probability — but this model historically lags supply-side shocks by 2-3 months.
+China's strategic petroleum reserve, estimated at 950 million barrels by the IEA, provides approximately 90 days of import coverage. But this calculation assumes normal drawdown rates — in practice, releasing SPR barrels while Hormuz remains contested would deplete the reserve faster than replacement volumes from alternative sources (Russia, West Africa, Latin America) can compensate.
 
-Markets are not yet pricing a recession as the base case. The spread between GeoWire's model and consensus estimates (Goldman Sachs at 28%) reflects the market's implicit assumption that a ceasefire will reopen Hormuz within 60 days. If that assumption proves wrong, the repricing will be abrupt.`,
+The People's Bank of China has already intervened twice in March to support the yuan against dollar strength driven by oil-priced capital flows. The combination of higher energy import costs, supply chain disruption, and currency pressure creates a stagflationary dynamic that Chinese policymakers have limited tools to address.`,
+    },
+    {
+      id: 'hidden-chains',
+      heading: 'The Sulfur-to-Semiconductor Chain Nobody Is Covering',
+      body: `Beyond the headline commodities, the conflict has disrupted two critical supply chains that mainstream coverage has largely ignored.
+
+The first is sulfur. The Persian Gulf produces approximately 24% of the world's seaborne sulfur, primarily as a byproduct of oil refining and natural gas processing in Kuwait, Saudi Arabia, and the UAE. Sulfur is essential for nickel High Pressure Acid Leaching (HPAL) — the process that produces battery-grade nickel for EV batteries. Indonesia's HPAL plants, which now supply over 40% of global Class 1 nickel, maintain only 1-2 months of sulfur inventory. A sustained Gulf sulfur disruption threatens the entire nickel-to-battery supply chain — a fact that battery analysts at Benchmark Minerals have flagged but that has received almost no mainstream attention.
+
+The second is helium. Iranian strikes damaged Qatar's Ras Laffan industrial complex, which produces approximately 30% of the world's semiconductor-grade helium as a byproduct of LNG processing. Repair timelines are estimated at 3-5 years. Helium is irreplaceable in chip fabrication — it's used for wafer cooling in EUV lithography and as a carrier gas in chemical vapor deposition. TSMC, Samsung, and Intel maintain 1-2 months of helium inventory. Spot helium prices have surged 40-100% since the conflict began, with no meaningful substitute available. This is the supply chain crisis that connects Persian Gulf bombs to your next smartphone's delivery date.`,
     },
   ],
 };
@@ -92,131 +111,149 @@ Markets are not yet pricing a recession as the base case. The spread between Geo
 
 const heliumSemiconductor: Article = {
   slug: 'helium-semiconductor-shortage',
-  title: 'The Helium Shortage Nobody\'s Talking About',
-  subtitle: 'How a noble gas crisis threatens the global semiconductor supply chain',
+  title: 'The Helium Crisis Nobody\'s Talking About',
+  subtitle: 'How Iranian strikes on Qatar knocked offline 30% of semiconductor-grade helium',
   excerpt:
-    'While the world focuses on oil, a parallel crisis is unfolding in helium markets — with direct implications for semiconductor manufacturing, MRI machines, and quantum computing research.',
+    'Iranian strikes on Qatar\'s Ras Laffan knocked offline 30% of global semiconductor-grade helium. Chip fabs have 1-2 months of inventory.',
   author: 'GeoWire Intelligence Desk',
-  date: '2026-03-25',
-  readingTime: 5,
-  topics: ['supply-chain'],
-  severity: 'medium',
+  date: '2026-03-29',
+  updatedAt: '2026-03-31',
+  readingTime: 6,
+  topics: ['supply-chain', 'technology'],
+  severity: 'high',
+  seoTitle: 'The Helium Crisis Nobody\'s Talking About — GeoWire',
+  seoDescription: 'Iranian strikes on Qatar\'s Ras Laffan knocked offline 30% of global semiconductor-grade helium. Chip fabs have 1-2 months of inventory.',
   sections: [
     {
-      id: 'invisible-crisis',
-      heading: 'The Invisible Crisis in Noble Gas Markets',
-      body: `Helium is the second most abundant element in the universe but one of the scarcest on Earth. Unlike other industrial gases, helium cannot be synthesized — it must be extracted from natural gas deposits where it exists in trace concentrations, typically 0.1% to 0.5% by volume. Once released into the atmosphere, it escapes Earth's gravity permanently. Every liter of helium we waste is gone forever.
+      id: 'ras-laffan-damage',
+      heading: 'What Happened at Ras Laffan',
+      body: `On March 28, 2026, Iranian IRGC missiles struck Qatar's Ras Laffan Industrial City as part of a broader retaliatory campaign following Israeli strikes on Iranian industrial targets. Ras Laffan is the world's largest LNG production hub — but it is also, less visibly, one of the world's most critical helium production facilities.
 
-Global helium production is concentrated in a remarkably small number of facilities. The United States produces approximately 40% of the world's helium, primarily from the Federal Helium Reserve in Amarillo, Texas and from natural gas processing plants in Wyoming and Kansas. Qatar produces roughly 25% through its massive LNG operations at Ras Laffan. Algeria contributes about 12%, Russia 8%, and Australia has been ramping up to approximately 6%.
+Qatar produces approximately 30% of the world's semiconductor-grade helium, extracted as a byproduct of its massive LNG operations. The helium separation and purification units at Ras Laffan, operated by RasGas and Qatargas, require specialized cryogenic equipment that cannot be quickly replaced. Initial damage assessments from QatarEnergy suggest a 3-5 year repair timeline for full helium production restoration — an estimate that assumes no further military escalation and uninterrupted access to specialized equipment from Air Liquide and Linde, the primary technology suppliers.
 
-The Hormuz crisis has effectively taken Qatar's 25% share offline. The Ras Laffan facility, which produces helium as a byproduct of LNG processing, routes its exports through the Strait of Hormuz. With the strait closed and Lloyd's of London suspending war-risk coverage, no helium tankers are transiting.`,
+The strike did not destroy the LNG trains themselves — those are underground and hardened — but the above-ground helium separation units, storage dewars, and pipeline infrastructure sustained significant damage. Qatar has prioritized LNG restoration over helium recovery, meaning the helium timeline may slip further.`,
     },
     {
-      id: 'semiconductor-dependency',
-      heading: 'Why Semiconductors Cannot Function Without Helium',
-      body: `Helium's unique physical properties make it irreplaceable in semiconductor fabrication. With a boiling point of -269°C — just 4 degrees above absolute zero — liquid helium is used as a coolant in the cryogenic systems that operate extreme ultraviolet (EUV) lithography machines. ASML's latest EUV systems, which produce every advanced chip below 7nm, consume approximately 100,000 liters of helium per year per machine.
+      id: 'why-chips-need-helium',
+      heading: 'Why Chips Cannot Be Made Without Helium',
+      body: `Helium's unique physical properties make it literally irreplaceable in modern semiconductor fabrication. With a boiling point of -269°C (4.2 Kelvin) — just four degrees above absolute zero — liquid helium is the only practical coolant for the superconducting magnets in extreme ultraviolet (EUV) lithography machines. ASML's latest High-NA EUV systems, which are required for every chip at 3nm and below, consume approximately 100,000 liters of liquid helium per year per machine.
 
-Beyond cooling, helium serves as a carrier gas in chemical vapor deposition (CVD) processes, where thin films are deposited onto silicon wafers. Its chemical inertness means it does not react with the exotic materials being deposited, while its small atomic radius allows it to purge reaction chambers more effectively than any substitute. Attempts to use hydrogen (the only smaller atom) introduce explosion risks in fab environments.
+Beyond lithography cooling, helium serves as an inert carrier gas in chemical vapor deposition (CVD) and physical vapor deposition (PVD) processes. Its small atomic radius (the smallest of any noble gas) allows it to purge reaction chambers more effectively than any alternative, while its chemical inertness prevents contamination of the exotic materials being deposited on silicon wafers. Attempts to substitute hydrogen (the only element with a smaller atom) introduce explosion risks in fab cleanroom environments where even trace sparks are unacceptable.
 
-The semiconductor industry consumes approximately 15% of global helium production. TSMC, Samsung, and Intel collectively operate over 200 EUV lithography systems worldwide. A sustained helium shortage would not immediately halt production — fabs maintain 30-60 day reserves — but would force a reduction in output that cascades through the entire electronics supply chain.`,
+Helium also plays a critical role in fiber optics manufacturing, where it is used as a cooling gas in the fiber drawing process. The same fiber optics that carry the internet depend on a steady helium supply for their production.`,
     },
     {
-      id: 'beyond-chips',
-      heading: 'Beyond Chips: Medical and Research Impact',
-      body: `Semiconductors are not the only helium-dependent industry facing disruption. Medical MRI machines use superconducting magnets cooled by liquid helium. The approximately 50,000 MRI machines installed worldwide each require periodic helium refills — and a shortage means hospitals must ration diagnostic imaging.
+      id: 'inventory-countdown',
+      heading: 'The Inventory Countdown',
+      body: `The semiconductor industry is now in a race against its own inventory buffers. TSMC maintains approximately 45-60 days of helium reserves at its Hsinchu, Tainan, and Kaohsiung fabs in Taiwan. Samsung's Pyeongtaek complex in South Korea has roughly 30-45 days. Intel's fabs in Oregon, Arizona, and Ireland operate on 40-55 day reserves, with some variation by process node.
 
-Quantum computing research, which relies on dilution refrigerators operating at temperatures below 15 millikelvin, is entirely dependent on helium-3, an even rarer isotope. NASA, CERN, and every major quantum computing lab from IBM to Google uses helium-3 for their systems. Current global helium-3 production is approximately 15,000 liters per year, mostly derived from tritium decay in nuclear weapons maintenance — a supply chain with zero elasticity.
+These buffers were designed to handle temporary logistics disruptions — a delayed tanker, a plant outage, a scheduling mismatch. They were never designed to absorb the loss of 30% of global supply for years. At current consumption rates, the first fabs to face rationing decisions will be those running the most advanced nodes (3nm and below), where helium consumption per wafer is highest due to the intensity of EUV exposure steps.
 
-Space launch operations also depend on helium for pressurizing fuel tanks and purging propellant lines. SpaceX, ULA, and Arianespace all use helium in launch operations. A sustained shortage could delay satellite deployments and resupply missions.`,
+Spot helium prices have already surged 40-100% since the conflict began, depending on grade and delivery location. Semiconductor-grade helium (99.9999% purity, or "six nines") has seen the sharpest increases because it requires additional purification steps that are capacity-constrained even under normal conditions. Praxair and Air Products, the two largest US helium distributors, have both implemented allocation programs — effectively rationing supply to existing contract customers.`,
     },
     {
-      id: 'strategic-reserve',
-      heading: 'The Strategic Reserve Problem',
-      body: `The US Federal Helium Reserve, once the world's backstop supply, has been in managed drawdown since 1996 under the Helium Privatization Act. The reserve, stored in a porous rock formation near Amarillo, Texas, once held over 1 billion cubic meters. As of early 2026, it contained approximately 80 million cubic meters — enough to supply US demand for roughly 18 months, but not designed to compensate for a 25% global supply loss.
+      id: 'no-substitutes',
+      heading: 'Why There Is No Substitute',
+      body: `Unlike most industrial gases, helium has no drop-in replacement for its critical semiconductor applications. Nitrogen can substitute in some low-criticality purging operations, but it lacks helium's thermal conductivity and atomic size advantages in CVD/PVD processes. Hydrogen has a smaller atom but is flammable. Neon, which is used in DUV lithography, cannot substitute for helium in EUV systems because it has a much higher boiling point and different thermal properties.
 
-The Bureau of Land Management, which manages the reserve, has not yet announced emergency release protocols. Unlike the Strategic Petroleum Reserve, which has established drawdown mechanisms, the helium reserve lacks a crisis playbook. This bureaucratic gap could delay response by weeks even after a shortage becomes acute.`,
+The fundamental problem is physics: helium is the only element that remains liquid below 5 Kelvin without solidifying under pressure. The superconducting magnets in EUV lithography systems require this property. There is no engineering workaround — you cannot build an EUV machine that doesn't use liquid helium with current technology.
+
+Alternative helium sources exist but cannot scale quickly. The US Federal Helium Reserve near Amarillo, Texas holds approximately 80 million cubic meters — enough for roughly 18 months of US demand. Algeria's Skikda plant and Russia's Gazprom operations can increase output by an estimated 10-15%, but this takes 6-12 months of ramp time. Australia's Darwin facility, not yet at full production, might contribute an additional 5-8% of global supply by late 2027.
+
+The arithmetic is unforgiving: 30% of supply is offline for years, alternative sources can add perhaps 15-20% within 12 months, and demand continues to grow at 5-7% annually as new fabs come online. The gap will persist until Ras Laffan is rebuilt.`,
     },
     {
-      id: 'market-outlook',
-      heading: 'Market Outlook and Supply Chain Implications',
-      body: `Helium prices have already risen 35% since the Hormuz closure, from approximately $8 per liter to $10.80. Industry analysts project prices could reach $15-18 per liter if the closure persists beyond 60 days — a level that would force some semiconductor fabs to reduce EUV utilization rates.
+      id: 'downstream-impact',
+      heading: 'From Fabs to Phones: The Downstream Impact',
+      body: `If the helium shortage forces EUV utilization cuts at leading-edge fabs, the downstream effects cascade through the entire electronics supply chain with a 60-90 day lag. The sequence is predictable: first, wafer starts decline at TSMC and Samsung foundry. Then, fabless chip designers (Apple, Qualcomm, Nvidia, AMD) receive reduced allocation. Finally, end products — smartphones, laptops, GPUs, automotive ECUs — face supply constraints.
 
-The downstream effects would appear with a 60-90 day lag. Consumer electronics — smartphones, laptops, automotive chips — would see supply constraints by mid-2026 if the crisis continues. Auto manufacturers, already scarred by the 2021-2022 chip shortage, have begun building buffer inventories, further straining available supply.
+The automotive sector, still scarred by the 2021-2022 chip shortage, has already begun defensive inventory building. Toyota and Volkswagen have both been reported by Supply Chain Dive as accelerating chip orders, further straining available foundry capacity and creating a self-reinforcing shortage dynamic.
 
-Australia's Darwin LNG facility and a new plant in Siberia could partially offset Qatar's lost production, but neither will reach full capacity before late 2027. In the near term, there is no substitute for Qatar's helium output. The world's semiconductor supply chain is, for the moment, hostage to a 21-mile-wide strait.`,
+Medical MRI machines, which use superconducting magnets cooled by liquid helium, face a parallel crisis. The approximately 50,000 MRI machines installed worldwide require periodic helium refills. Hospitals are already reporting allocation limitations from their helium suppliers — a development that could force rationing of diagnostic imaging capacity.
+
+GeoWire tracks this supply chain disruption in real time through our Supply Chain Cascade Map, which shows the helium flow routes from Qatar to global chip fabs and the current disruption status. The dashboard's recession probability model incorporates the semiconductor supply chain impact through its technology disruption adjustment factor.`,
     },
   ],
 };
 
-// ─── Article 3: Yield Curve 2026 ─────────────────────────────────────────────
+// ─── Article 3: Yield Curve Un-Inversion ────────────────────────────────────
 
-const yieldCurve2026: Article = {
-  slug: 'yield-curve-2026',
-  title: 'Reading the Yield Curve: What 2026\'s Inversion Tells Us',
-  subtitle: 'Inside the NY Fed probit model and what the current T10Y3M spread signals',
+const yieldCurveUninversion: Article = {
+  slug: 'yield-curve-2026-recession-signal',
+  title: 'Reading the Yield Curve: What the 2026 Un-Inversion Tells Us',
+  subtitle: 'The yield curve just un-inverted after the longest inversion in history — and that\'s the danger signal',
   excerpt:
-    'The yield curve has predicted every US recession since 1955. We examine the Estrella-Mishkin model behind the NY Fed\'s probability estimates and what today\'s spread implies for the next 12 months.',
+    'The yield curve just un-inverted after the longest inversion in history. History says the un-inversion is the danger signal, not the inversion itself.',
   author: 'GeoWire Intelligence Desk',
-  date: '2026-03-22',
-  readingTime: 7,
+  date: '2026-03-31',
+  updatedAt: '2026-03-31',
+  readingTime: 6,
   topics: ['recession-risk'],
   severity: 'elevated',
+  seoTitle: 'Yield Curve Un-Inversion 2026: The Recession Signal — GeoWire',
+  seoDescription: 'The yield curve just un-inverted after the longest inversion in history. History says the un-inversion is the danger signal, not the inversion itself.',
   sections: [
     {
-      id: 'the-signal',
-      heading: 'The Most Reliable Signal in Macroeconomics',
-      body: `Since 1955, every US recession has been preceded by an inversion of the yield curve — a condition where short-term Treasury yields exceed long-term yields. The track record is remarkable: seven correct signals in seven recessions, with only two brief false positives (1966 and 1998) that produced slowdowns rather than technical recessions.
+      id: 'the-un-inversion',
+      heading: 'The Un-Inversion Nobody Expected',
+      body: `As of March 31, 2026, the 10-year minus 3-month Treasury spread (T10Y3M) has turned positive at 0.60 — ending the longest sustained yield curve inversion in modern history. The spread had been negative since mid-2022, roughly 42 months of continuous inversion that eclipsed the previous record of 21 months set in 1978-1980.
 
-The yield curve works as a recession predictor because it reflects the collective judgment of the bond market about future economic conditions. When investors expect growth to slow, they buy long-term bonds for safety, pushing long-term yields down. When the Fed raises short-term rates to fight inflation, short-term yields rise. The resulting inversion is the bond market's way of saying: "The Fed is tightening into a weakening economy."
+Financial media is treating the un-inversion as good news. "Yield Curve Normalizes" read one headline. "Recession Signal Clears" announced another. This interpretation is dangerously wrong.
 
-The spread most commonly watched is the 10-year minus 3-month Treasury spread (T10Y3M), which the NY Fed uses in its official recession probability model. As of late March 2026, this spread stands at approximately -0.45%, having been negative since mid-2025.`,
+The historical pattern is unambiguous: recessions begin AFTER the yield curve un-inverts, not during the inversion. The inversion is the warning. The un-inversion is the starting gun. In every recession since 1970 — 1973, 1980, 1981, 1990, 2001, 2008, 2020 — the curve un-inverted (returned to positive slope) within 2-18 months before the recession officially began. The median lag from un-inversion to recession onset is approximately 5 months.
+
+The mechanism is straightforward: the curve un-inverts because either the Fed begins cutting short-term rates in response to deteriorating economic data (pushing the short end down) or because long-term rates spike on rising inflation expectations (pushing the long end up). In the current case, both forces are at work — the market is pricing in emergency Fed cuts while the oil shock is driving long-term inflation expectations higher.`,
     },
     {
-      id: 'estrella-mishkin',
-      heading: 'The Estrella-Mishkin Probit Model',
-      body: `The NY Fed's recession probability model was developed by Arturo Estrella and Frederic Mishkin in their 1998 paper "Predicting U.S. Recessions: Financial Variables as Leading Indicators." The model uses a probit regression — a statistical technique that estimates the probability of a binary outcome (recession or no recession) based on a continuous input (the yield spread).
+      id: 'estrella-mishkin-model',
+      heading: 'Inside the Estrella-Mishkin Probit Model',
+      body: `The NY Fed's recession probability model, developed by Arturo Estrella and Frederic Mishkin in their seminal 1998 paper "Predicting U.S. Recessions: Financial Variables as Leading Indicators," uses a probit regression with a single input: the T10Y3M spread. The model's coefficients (β₀ = -0.5333, β₁ = -0.6330) produce a probability via Φ(β₀ + β₁ × spread), where Φ is the standard normal CDF.
 
-The model's specification is elegant in its simplicity. It takes a single input — the T10Y3M spread — and produces a probability using two coefficients: β₀ = -0.5333 (the intercept) and β₁ = -0.6330 (the slope on the spread). The probability is computed as Φ(β₀ + β₁ × spread), where Φ is the standard normal cumulative distribution function.
+At the current spread of +0.60, the model outputs a recession probability of approximately 15-18%. This is actually LOWER than when the curve was inverted — which seems counterintuitive but reflects the model's design. The probit model captures the credit conditions signal embedded in the yield curve. A positive spread means the bond market currently sees easier credit conditions ahead. What the model cannot capture is the lag effect: the economic damage from the 42-month inversion is already baked in and working through the system.
 
-At the current T10Y3M spread of approximately -0.45%, the model outputs a recession probability of roughly 18%. This may seem surprisingly low given the geopolitical crisis, but the model is designed to capture the yield curve's signal about credit conditions and monetary policy — not supply-side shocks. The probit model is a monetary policy thermometer; it does not measure geopolitical fevers.`,
+This is the fundamental limitation of the Estrella-Mishkin model in the current environment. It is a real-time thermometer that reads "normal" the moment the fever breaks — even if the underlying infection is worsening. GeoWire's composite model addresses this by incorporating five additional signals that capture the lagged effects the yield curve alone misses.`,
     },
     {
-      id: 'historical-timing',
-      heading: 'Historical Timing: Inversion to Recession',
-      body: `One of the most important features of the yield curve signal is its lead time. Historically, the gap between initial inversion and recession onset has ranged from 6 to 24 months, with a median of approximately 14 months.
+      id: 'oil-shock-compound',
+      heading: 'The Oil Shock Compounding Factor',
+      body: `James Hamilton's 2003 analysis of oil price shocks and economic activity introduced the Net Oil Price Increase (NOPI) framework — a measure of how much oil prices have risen above their previous 3-year peak. When NOPI is positive and large, recessions follow with high reliability.
 
-The 2006-2007 inversion preceded the Great Recession by 23 months — long enough that many commentators had dismissed the signal as a false positive before the recession began. The 2019 inversion preceded the 2020 recession by roughly 8 months, though the proximate cause was the COVID pandemic rather than the credit cycle the curve was measuring.
+The current NOPI reading is extreme. Brent crude at $105/barrel represents a roughly 55% increase above its 3-year trailing high of approximately $68. Hamilton's coefficient (-0.15 oil-to-GDP elasticity) implies a GDP drag of approximately 8.25% on an annualized basis — though the actual impact depends on duration and the speed of supply adjustment.
 
-The current inversion began in approximately September 2025, placing us roughly 6 months into the inversion window. If the historical median holds, the recession risk window peaks around November 2026 — but the Hormuz crisis could accelerate the timeline significantly.
+What makes the current situation historically unusual is the combination of a yield curve un-inversion signal AND a major oil shock occurring simultaneously. In 1973, the oil shock preceded the yield curve signal. In 2008, the yield curve inverted well before oil spiked. In 2026, we have both signals firing together, which amplifies the recession risk beyond what either indicator alone would suggest.
 
-An important nuance: the yield curve often un-inverts (returns to positive slope) shortly before the recession actually begins. This un-inversion occurs because the Fed begins cutting rates in response to deteriorating conditions. The un-inversion is not an "all clear" — it is typically the final warning.`,
+GeoWire's Hamilton NOPI model currently contributes the largest single upward adjustment to our composite recession probability — more than the yield curve, more than credit spreads, more than the Sahm Rule. The oil shock is the dominant risk factor.`,
     },
     {
-      id: 'limitations',
-      heading: 'What the Yield Curve Cannot Tell Us',
-      body: `For all its predictive power, the yield curve has significant blind spots. It measures expectations about monetary policy and credit conditions, not external shocks. The 1973 oil embargo, which triggered a severe recession, was not predicted by the yield curve — the inversion followed rather than preceded the shock.
+      id: 'sahm-rule',
+      heading: 'The Sahm Rule: Labor Market Early Warning',
+      body: `The Sahm Rule, developed by economist Claudia Sahm in 2019, triggers when the 3-month moving average of the national unemployment rate rises 0.50 percentage points or more above its low from the prior 12 months. It has correctly identified every recession since 1970 in real time — often before official NBER dating.
 
-The current situation presents a similar challenge. The Hormuz crisis is a supply-side shock that operates through a different transmission mechanism than the monetary tightening cycles the yield curve is designed to detect. The 18% probability from the Estrella-Mishkin model likely understates the true recession risk because the model's training data does not include scenarios where a geopolitical event removes 20% of global oil supply.
+The current Sahm Rule reading is 0.37 — below the 0.50 trigger threshold but rising. The March jobs report showed unemployment at 4.2%, up from 3.7% at its cycle low. The trajectory matters: the Sahm indicator has risen 0.15 points in the last two months alone, an acceleration rate consistent with the early stages of the 2001 and 2008 recessions.
 
-This is why GeoWire's composite model incorporates five additional indicators beyond the yield curve: the Sahm Rule (labor market deterioration), Hamilton's NOPI model (oil shock detection), the Philadelphia Fed Leading Index, the credit spread, and a geopolitical risk adjustment. The composite probability of 20.4% is higher than the yield curve alone would suggest, and could rise significantly if the crisis persists.`,
+Initial jobless claims, the weekly leading indicator of labor market stress, have crept above 240,000 — not yet alarming in isolation, but up 15% from the 210,000 average in Q4 2025. Energy-sector layoffs in the Gulf Coast and rising construction sector unemployment (as interest rates suppress housing starts) are the primary drivers.
+
+If the Sahm Rule triggers at 0.50, it will be the first time in history that the trigger coincides with both a yield curve un-inversion and an active oil shock. The triple confluence has no modern precedent.`,
     },
     {
       id: 'what-to-watch',
-      heading: 'What to Watch: Key Thresholds Ahead',
-      body: `Several yield curve signals bear watching in the weeks ahead. First, the slope of the un-inversion: if the T10Y3M spread begins moving toward zero rapidly, it could signal that the Fed is preparing emergency rate action — historically a bearish signal despite the intuitive appeal of "normalization."
+      heading: 'What to Watch: A Triple Threat Without Modern Precedent',
+      body: `The convergence of three historically reliable recession signals — yield curve un-inversion, Hamilton NOPI oil shock, and an approaching Sahm Rule trigger — creates a risk environment that deserves more attention than it is receiving. No single prior recession featured all three signals activating within the same quarter.
 
-Second, the 10-year minus 2-year spread (T10Y2Y), which has been negative since mid-2025, is approaching the -0.50% level that has preceded the last three recessions with a 100% hit rate. A sustained move below -0.50% would push the NY Fed model's implied probability above 25%.
+For investors, the key thresholds to monitor are: the Sahm Rule crossing 0.50 (currently 0.37 and rising), high-yield credit spreads crossing 500 basis points (currently approximately 420 and widening), and the Philadelphia Fed Leading Index turning negative for three consecutive months (currently at -0.8 for February, following -0.2 in January).
 
-Third, credit spreads — specifically the ICE BofA High Yield spread — are widening. When this spread exceeds 500 basis points, it has historically coincided with or preceded recession in 85% of cases. The current spread is approximately 420 basis points, elevated but not yet at crisis levels.
+For business owners, the practical implications are more immediate. The oil shock is already flowing through to transportation costs, with diesel up 38% from pre-crisis levels. The steel and aluminum supply disruptions are adding 15-25% to construction material costs. And the semiconductor supply chain — threatened by the helium shortage — could constrain technology equipment availability by mid-2026.
 
-The yield curve is not a crystal ball. It is a barometer — one that has proven remarkably reliable over seven decades. Its current reading is cautionary but not yet alarming in isolation. Combined with the oil shock transmission and labor market signals, however, the overall picture warrants significantly more concern than any single indicator suggests alone.`,
+GeoWire's composite recession probability model currently estimates a 62% probability of US recession within 12 months. This figure incorporates all six of our academic models: the NY Fed Probit (yield curve), Hamilton NOPI (oil shock), Sahm Rule (labor market), Philadelphia Fed Leading Index (broad leading indicators), credit spreads (financial conditions), and our geopolitical risk adjustment. The live reading is available on our dashboard, updated hourly with fresh FRED data.
+
+The yield curve "normalizing" is not the all-clear signal the headlines suggest. It is, historically, the final warning.`,
     },
   ],
 };
 
 // ─── Exports ─────────────────────────────────────────────────────────────────
 
-export const ARTICLES: Article[] = [straitOfHormuz, heliumSemiconductor, yieldCurve2026];
+export const ARTICLES: Article[] = [fortressAmericas, heliumSemiconductor, yieldCurveUninversion];
 
 export function getArticleBySlug(slug: string): Article | undefined {
   return ARTICLES.find((a) => a.slug === slug);
