@@ -480,6 +480,27 @@
     "sp500": "Philly Fed Leading"
   },
 
+  "supplyChainMap": {
+    "title": "Global Supply Chain Disruption Monitor",
+    "subtitle": "Real-time tracking of oil, steel, aluminum, LNG, helium, and sulfur flows disrupted by the 2026 Iran conflict",
+    "layersTitle": "Supply Chain Layers",
+    "oil": "Crude Oil",
+    "steel": "Steel",
+    "aluminum": "Aluminum",
+    "lng": "LNG",
+    "helium": "Helium",
+    "sulfur": "Sulfur",
+    "disrupted": "DISRUPTED",
+    "normal": "NORMAL",
+    "partial": "PARTIAL",
+    "normalRoutes": "Normal Routes",
+    "disruptedRoutes": "Disrupted Routes",
+    "legendNormal": "Normal Route",
+    "legendSanctions": "Sanctions / Partial",
+    "legendDisrupted": "Disrupted",
+    "legendBlocked": "Chokepoint Blocked"
+  },
+
   "globe": {
     "toggleNormal": "Normal Routes",
     "toggleDisrupted": "Disrupted Routes",

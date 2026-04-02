@@ -11,7 +11,7 @@ import { TrustBar } from '@/components/home/TrustBar';
 import { SparklineCards } from '@/components/dashboard/SparklineCards';
 import { GlobeHero } from '@/components/homepage/GlobeHero';
 import { ScenarioCards } from '@/components/homepage/ScenarioCards';
-import { HomepageHormuzWrapper } from '@/components/homepage/HomepageHormuzWrapper';
+import { SupplyChainMapWrapper } from '@/components/maps/SupplyChainMapWrapper';
 import { HomepageWhatChangedWrapper } from '@/components/homepage/HomepageWhatChangedWrapper';
 import { ChartErrorBoundary } from '@/components/dashboard/ChartErrorBoundary';
 
@@ -118,8 +118,8 @@ export default function HomePage() {
           margin: '0 0 28px 0',
         }} />
 
-        {/* Live Hormuz Map — full width, expanded, animated routes */}
-        <section className="hormuz-homepage-section" style={{ marginBottom: '32px' }}>
+        {/* Supply Chain Cascade Map — multi-commodity disruption monitor */}
+        <section style={{ marginBottom: '32px' }}>
           <h2 style={{
             fontFamily: 'var(--font-heading)',
             fontSize: '20px',
@@ -129,7 +129,7 @@ export default function HomePage() {
             letterSpacing: '-0.01em',
             textAlign: 'center',
           }}>
-            {t('hormuzSection.heading')}
+            Global Supply Chain Disruption Monitor
           </h2>
           <p style={{
             fontFamily: 'var(--font-body)',
@@ -139,10 +139,10 @@ export default function HomePage() {
             marginBottom: '20px',
             lineHeight: 1.5,
           }}>
-            {t('hormuzSection.subheading')}
+            Real-time tracking of oil, steel, aluminum, LNG, helium, and sulfur flows disrupted by the 2026 Iran conflict
           </p>
-          <ChartErrorBoundary label="Hormuz Map">
-            <HomepageHormuzWrapper />
+          <ChartErrorBoundary label="Supply Chain Map">
+            <SupplyChainMapWrapper />
           </ChartErrorBoundary>
         </section>
 
