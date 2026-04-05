@@ -8,7 +8,14 @@ import { GlassCard } from '@/components/ui/GlassCard';
 export const metadata: Metadata = {
   title: 'About — GeoWire',
   description:
-    'How GeoWire calculates recession probability — methodology, models, data sources, and academic citations.',
+    'GeoWire is a macro intelligence platform built by economists and data scientists. Learn about our recession models, methodology, and data sources.',
+  openGraph: {
+    title: 'About — GeoWire',
+    description:
+      'GeoWire is a macro intelligence platform tracking recession probability with live Federal Reserve data and academic models.',
+    type: 'website',
+    url: 'https://www.geowire.org/en/about',
+  },
 };
 
 const MODEL_KEYS = [
@@ -62,7 +69,28 @@ export default function AboutPage() {
           {t('pageSubtitle')}
         </p>
 
-        {/* Intro */}
+        {/* Who We Are */}
+        <section style={{ marginBottom: '40px' }}>
+          <h2 style={sectionHeadingStyle}>Who We Are</h2>
+          <p style={bodyStyle}>
+            GeoWire is a macro intelligence platform built by economists and data scientists. We
+            connect geopolitical events to quantified recession probability using live Federal
+            Reserve data, calibrated academic models, and supply chain analysis.
+          </p>
+          <p style={bodyStyle}>
+            We believe that recession intelligence should be accessible, transparent, and grounded
+            in peer-reviewed research — not paywalled behind $25,000/year terminal subscriptions.
+            Every model coefficient is published. Every data source is public. Every methodology is
+            documented.
+          </p>
+          <p style={bodyStyle}>
+            GeoWire tracks 13 live economic indicators from FRED, applies 6 recession models with
+            published academic citations, and updates hourly. Our composite model is cross-validated
+            against the Federal Reserve&apos;s own Chauvet-Piger recession probability series.
+          </p>
+        </section>
+
+        {/* Intro / Methodology */}
         <section style={{ marginBottom: '40px' }}>
           <h2 style={sectionHeadingStyle}>{t('introTitle')}</h2>
           <p style={bodyStyle}>{t('introBody')}</p>
@@ -135,6 +163,24 @@ export default function AboutPage() {
         <section style={{ marginBottom: '40px' }}>
           <h2 style={sectionHeadingStyle}>{t('dataSourcesTitle')}</h2>
           <p style={bodyStyle}>{t('dataSourcesBody')}</p>
+        </section>
+
+        {/* Data Transparency */}
+        <section style={{ marginBottom: '40px' }}>
+          <h2 style={sectionHeadingStyle}>Data Transparency</h2>
+          <p style={bodyStyle}>
+            All model coefficients used by GeoWire are published on this page with full academic
+            citations. All economic data comes from FRED, a free public API maintained by the
+            Federal Reserve Bank of St. Louis. We do not use proprietary data sources that users
+            cannot independently verify.
+          </p>
+          <p style={bodyStyle}>
+            Our composite scoring methodology weights each model based on its historical accuracy
+            at predicting NBER-dated recessions. The weights, thresholds, and trigger conditions
+            are documented above. When we label a model as &ldquo;HEURISTIC,&rdquo; we are
+            explicitly noting that its thresholds are derived from historical observation rather
+            than a peer-reviewed coefficient estimate.
+          </p>
         </section>
 
         {/* Disclaimer */}

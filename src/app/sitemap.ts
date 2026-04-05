@@ -11,6 +11,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/en/commodities`, changeFrequency: 'weekly', priority: 0.7 },
     { url: `${BASE_URL}/en/about`, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/en/pricing`, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE_URL}/en/privacy`, changeFrequency: 'monthly', priority: 0.4 },
+    { url: `${BASE_URL}/en/terms`, changeFrequency: 'monthly', priority: 0.4 },
+    { url: `${BASE_URL}/en/contact`, changeFrequency: 'monthly', priority: 0.5 },
   ];
 
   const articlePages: MetadataRoute.Sitemap = ARTICLES.map((article) => ({

@@ -21,14 +21,18 @@ export function Footer() {
       }}
     >
       <span>{t('copyright')}</span>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }}>
         <Link href="/en/about" className="gw-footer-link">{t('about')}</Link>
         <Separator />
-        <Link href="/en/about" className="gw-footer-link">{t('methodology')}</Link>
+        <Link href="/en/analysis" className="gw-footer-link">Analysis</Link>
         <Separator />
         <Link href="/en/pricing" className="gw-footer-link">{t('pricing')}</Link>
         <Separator />
-        <span style={{ opacity: 0.5, cursor: 'default' }}>{t('apiComingSoon')}</span>
+        <Link href="/en/privacy" className="gw-footer-link">{t('privacy')}</Link>
+        <Separator />
+        <Link href="/en/terms" className="gw-footer-link">Terms</Link>
+        <Separator />
+        <Link href="/en/contact" className="gw-footer-link">Contact</Link>
       </div>
     </footer>
   );
