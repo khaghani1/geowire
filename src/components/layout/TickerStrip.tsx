@@ -8,66 +8,171 @@ import { useTranslations } from 'next-intl';
 interface TickerItem {
   label: string;
   value: string;
-  change?: string;      // e.g. "▼9.38 (-9.5%)"
+  change?: string;      // e.g. "▼2.38 (-2.3%)"
   direction?: 'up' | 'down' | 'neutral';
-  isStatus?: boolean;   // For non-numeric items like "Hormuz Status"
+  isStatus?: boolean;   // For non-numeric items like "Recession Risk"
 }
 
-// ─── Static fallback data (replaced by live data when available) ─────────────
+// ─── FRED series we can fetch live ───────────────────────────────────────────
+
+interface FredSeries {
+  id: string;
+  label: string;
+  format: (val: number, prev?: number) => TickerItem;
+}
+
+function pctChange(curr: number, prev?: number): { change?: string; direction: 'up' | 'down' | 'neutral' } {
+  if (prev === undefined || prev === 0) return { direction: 'neutral' };
+  const diff = curr - prev;
+  const pct = (diff / prev) * 100;
+  const arrow = diff >= 0 ? '▲' : '▼';
+  const sign = diff >= 0 ? '+' : '';
+  return {
+    change: `${arrow}${Math.abs(diff).toFixed(2)} (${sign}${pct.toFixed(1)}%)`,
+    direction: diff >= 0 ? 'up' : 'down',
+  };
+}
+
+const FRED_SERIES: FredSeries[] = [
+  {
+    id: 'DCOILWTICO',
+    label: 'WTI Crude',
+    format: (val, prev) => ({
+      label: 'WTI Crude',
+      value: `$${val.toFixed(2)}`,
+      ...pctChange(val, prev),
+    }),
+  },
+  {
+    id: 'T10Y3M',
+    label: '10Y-3M Spread',
+    format: (val) => ({
+      label: '10Y-3M Spread',
+      value: `${val.toFixed(2)}%`,
+      direction: val < 0 ? 'down' : 'up',
+    }),
+  },
+  {
+    id: 'BAMLH0A0HYM2',
+    label: 'Credit Spread',
+    format: (val, prev) => ({
+      label: 'Credit Spread',
+      value: `${val.toFixed(2)}%`,
+      ...pctChange(val, prev),
+    }),
+  },
+  {
+    id: 'ICSA',
+    label: 'Jobless Claims',
+    format: (val, prev) => ({
+      label: 'Jobless Claims',
+      value: `${(val / 1000).toFixed(0)}K`,
+      ...pctChange(val, prev),
+    }),
+  },
+  {
+    id: 'UMCSENT',
+    label: 'Consumer Sentiment',
+    format: (val, prev) => ({
+      label: 'Consumer Sent.',
+      value: val.toFixed(1),
+      ...pctChange(val, prev),
+    }),
+  },
+  {
+    id: 'UNRATE',
+    label: 'Unemployment',
+    format: (val) => ({
+      label: 'Unemployment',
+      value: `${val.toFixed(1)}%`,
+      direction: val > 5 ? 'down' : val > 4 ? 'neutral' : 'up',
+    }),
+  },
+];
+
+// ─── Static fallback (shown until live data loads) ───────────────────────────
 
 const STATIC_TICKER: TickerItem[] = [
-  { label: 'WTI Crude',    value: '$89.33',  change: '▼9.38 (-9.5%)',   direction: 'down' },
-  { label: 'Brent Crude',  value: '$92.10',  change: '▼8.20 (-8.2%)',   direction: 'down' },
-  { label: 'Gold',         value: '$3,124',  change: '▲42 (+1.4%)',     direction: 'up' },
-  { label: 'VIX',          value: '22.4',    change: '▲1.8 (+8.7%)',    direction: 'up' },
-  { label: 'S&P 500',      value: '5,580',   change: '▼45 (-0.8%)',     direction: 'down' },
-  { label: '10Y Treasury', value: '4.21%',   direction: 'neutral' },
-  { label: 'BTC',          value: '$84,200', change: '▼1,200 (-1.4%)',  direction: 'down' },
-  { label: 'Hormuz Status', value: '⚠ ELEVATED RISK', isStatus: true, direction: 'down' },
+  { label: 'WTI Crude',       value: '—', direction: 'neutral' },
+  { label: '10Y-3M Spread',   value: '—', direction: 'neutral' },
+  { label: 'Credit Spread',   value: '—', direction: 'neutral' },
+  { label: 'Jobless Claims',  value: '—', direction: 'neutral' },
+  { label: 'Consumer Sent.',   value: '—', direction: 'neutral' },
+  { label: 'Unemployment',    value: '—', direction: 'neutral' },
+  { label: 'Recession Risk',  value: '—', isStatus: true, direction: 'neutral' },
 ];
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+function getLastTwo(obs: { date: string; value: number | null }[]): { curr: number; prev?: number } | null {
+  const valid = obs.filter((o) => o.value !== null);
+  if (valid.length === 0) return null;
+  const curr = valid[valid.length - 1].value!;
+  const prev = valid.length >= 2 ? valid[valid.length - 2].value! : undefined;
+  return { curr, prev };
+}
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export function TickerStrip() {
   const t = useTranslations('ticker');
   const [items, setItems] = useState<TickerItem[]>(STATIC_TICKER);
-  const [liveLoaded, setLiveLoaded] = useState(false);
 
-  // Try to enrich from recession-score API
   useEffect(() => {
     let cancelled = false;
+
     (async () => {
       try {
-        const res = await fetch('/api/v1/recession-score');
-        if (!res.ok) return;
-        const data = await res.json();
+        // Fetch all FRED series + recession score in parallel
+        const [scoreRes, ...fredResults] = await Promise.all([
+          fetch('/api/v1/recession-score'),
+          ...FRED_SERIES.map((s) => fetch(`/api/v1/fred/${s.id}`)),
+        ]);
 
         if (cancelled) return;
 
-        // Find oil price from models if available
-        const updated = [...STATIC_TICKER];
+        const tickerItems: TickerItem[] = [];
 
-        // Update recession probability in Hormuz status if available
-        if (data.probability !== undefined) {
-          const hormuzIdx = updated.findIndex((i) => i.isStatus);
-          if (hormuzIdx >= 0) {
-            const prob = data.probability;
-            updated[hormuzIdx] = {
-              ...updated[hormuzIdx],
-              value: prob > 30
-                ? '⚠ ELEVATED RISK'
-                : '✓ NORMAL',
-              direction: prob > 30 ? 'down' : 'up',
-            };
-          }
+        // Process each FRED series
+        for (let i = 0; i < FRED_SERIES.length; i++) {
+          const series = FRED_SERIES[i];
+          const res = fredResults[i];
+          try {
+            if (res.ok) {
+              const data = await res.json();
+              const vals = getLastTwo(data.observations || []);
+              if (vals) {
+                tickerItems.push(series.format(vals.curr, vals.prev));
+                continue;
+              }
+            }
+          } catch { /* fall through */ }
+          // Fallback for this series
+          tickerItems.push({ label: series.label, value: '—', direction: 'neutral' });
         }
 
-        setItems(updated);
-        setLiveLoaded(true);
+        // Add recession probability as status item
+        try {
+          if (scoreRes.ok) {
+            const scoreData = await scoreRes.json();
+            const prob = scoreData.probability ?? 0;
+            tickerItems.push({
+              label: 'Recession Risk',
+              value: prob >= 50 ? `⚠ ${prob.toFixed(1)}%` : `${prob.toFixed(1)}%`,
+              isStatus: true,
+              direction: prob >= 50 ? 'down' : prob >= 25 ? 'neutral' : 'up',
+            });
+          }
+        } catch {
+          tickerItems.push({ label: 'Recession Risk', value: '—', isStatus: true, direction: 'neutral' });
+        }
+
+        if (!cancelled) setItems(tickerItems);
       } catch {
         // keep static fallback
       }
     })();
+
     return () => { cancelled = true; };
   }, []);
 
