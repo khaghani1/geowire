@@ -1,18 +1,18 @@
 import { useTranslations } from 'next-intl';
-import { AlertBanner } from '@/components/layout/AlertBanner';
+import { AlertBannerLiveWrapper } from '@/components/layout/AlertBannerLiveWrapper';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { SeverityBadge } from '@/components/ui/SeverityBadge';
 import type { Severity } from '@/components/ui/SeverityBadge';
 import { HomeKpiCards } from '@/components/home/HomeKpiCards';
-import { HomeRecessionFactors } from '@/components/home/HomeRecessionFactors';
+import { RecessionFactorsLiveWrapper } from '@/components/home/RecessionFactorsLiveWrapper';
 import { TrustBar } from '@/components/home/TrustBar';
 import { SparklineCards } from '@/components/dashboard/SparklineCards';
 import { GlobeHero } from '@/components/homepage/GlobeHero';
 import { ScenarioCards } from '@/components/homepage/ScenarioCards';
 import { SupplyChainMapWrapper } from '@/components/maps/SupplyChainMapWrapper';
-import { HomepageWhatChangedWrapper } from '@/components/homepage/HomepageWhatChangedWrapper';
+import { WhatChangedTodayWrapper } from '@/components/home/WhatChangedTodayWrapper';
 import { ChartErrorBoundary } from '@/components/dashboard/ChartErrorBoundary';
 
 // ── Static data keys (content lives in en.json) ──────────────────────────
@@ -39,8 +39,8 @@ export default function HomePage() {
         background: 'var(--bg-primary)',
       }}
     >
-      {/* Alert Banner — first visible element, above nav */}
-      <AlertBanner />
+      {/* Alert Banner — live recession probability from API */}
+      <AlertBannerLiveWrapper />
 
       {/* Top Navigation */}
       <Navbar />
@@ -165,7 +165,7 @@ export default function HomePage() {
           margin: '0 0 28px 0',
         }} />
 
-        {/* What Changed Today */}
+        {/* What Changed Today — live indicator snapshot */}
         <section style={{ marginBottom: '32px' }}>
           <h2 style={{
             fontFamily: 'var(--font-heading)',
@@ -179,7 +179,7 @@ export default function HomePage() {
             {t('whatChangedSection.heading')}
           </h2>
           <GlassCard style={{ maxWidth: '720px', margin: '0 auto' }}>
-            <HomepageWhatChangedWrapper />
+            <WhatChangedTodayWrapper />
           </GlassCard>
         </section>
 
@@ -228,7 +228,7 @@ export default function HomePage() {
           </div>
 
           {/* Right: Recession Factors — live from API */}
-          <HomeRecessionFactors />
+          <RecessionFactorsLiveWrapper />
         </section>
       </main>
 

@@ -1,4 +1,4 @@
-import { AlertBanner } from '@/components/layout/AlertBanner';
+import { AlertBannerLiveWrapper } from '@/components/layout/AlertBannerLiveWrapper';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { CommodityExplorer } from '@/components/commodities/CommodityExplorer';
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function CommoditiesPage() {
   return (
     <>
-      <AlertBanner />
+      <AlertBannerLiveWrapper />
       <Navbar />
 
       <main style={{ maxWidth: '1120px', margin: '0 auto', padding: '40px 24px 60px' }}>

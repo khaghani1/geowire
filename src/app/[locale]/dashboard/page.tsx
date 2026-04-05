@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations, useFormatter } from 'next-intl';
-import { AlertBanner } from '@/components/layout/AlertBanner';
+import { AlertBannerLiveWrapper } from '@/components/layout/AlertBannerLiveWrapper';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { GlassCard } from '@/components/ui/GlassCard';
@@ -180,7 +180,7 @@ export default function DashboardPage() {
       minHeight: '100vh',
       background: 'var(--bg-primary)',
     }}>
-      <AlertBanner />
+      <AlertBannerLiveWrapper />
       <Navbar />
 
       <main style={{ flex: 1, padding: '28px 24px', maxWidth: '1360px', margin: '0 auto', width: '100%' }}>

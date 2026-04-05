@@ -62,6 +62,19 @@ export function ScenarioCards() {
         ))}
       </div>
 
+      {/* Hamilton attribution */}
+      <p style={{
+        fontSize: '11px',
+        color: 'var(--text-secondary)',
+        opacity: 0.5,
+        textAlign: 'center',
+        marginTop: '12px',
+        fontFamily: 'var(--font-body)',
+        lineHeight: 1.4,
+      }}>
+        Projected ranges based on Hamilton (2003) oil price elasticity model
+      </p>
+
       {/* Responsive: 2x2 on tablet, 1 col on phone */}
       <style>{`
         @media (max-width: 1024px) {

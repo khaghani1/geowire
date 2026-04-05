@@ -1,5 +1,5 @@
 import { useTranslations } from 'next-intl';
-import { AlertBanner } from '@/components/layout/AlertBanner';
+import { AlertBannerLiveWrapper } from '@/components/layout/AlertBannerLiveWrapper';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { ArticleGrid } from '@/components/analysis/ArticleGrid';
@@ -16,7 +16,7 @@ export default function AnalysisPage() {
 
   return (
     <>
-      <AlertBanner />
+      <AlertBannerLiveWrapper />
       <Navbar />
 
       <main style={{ maxWidth: '1120px', margin: '0 auto', padding: '40px 24px 60px' }}>

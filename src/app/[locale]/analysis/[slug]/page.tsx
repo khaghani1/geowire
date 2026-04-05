@@ -1,10 +1,11 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getArticleBySlug, getRelatedArticles, ARTICLES } from '@/lib/data/articles';
-import { AlertBanner } from '@/components/layout/AlertBanner';
+import { AlertBannerLiveWrapper } from '@/components/layout/AlertBannerLiveWrapper';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { ArticleDetailClient } from '@/components/analysis/ArticleDetailClient';
+import { ArticleDisclaimer } from '@/components/articles/ArticleDisclaimer';
 
 // ─── Static params for all articles ─────────────────────────────────────────
 
@@ -67,7 +68,7 @@ export default async function ArticleDetailPage({ params }: PageProps) {
 
   return (
     <>
-      <AlertBanner />
+      <AlertBannerLiveWrapper />
       <Navbar />
 
       {/* JSON-LD structured data */}
@@ -75,6 +76,11 @@ export default async function ArticleDetailPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+
+      {/* Data disclaimer — between header and article body */}
+      <div style={{ maxWidth: '1120px', margin: '0 auto', padding: '24px 24px 0' }}>
+        <ArticleDisclaimer publishedAt={article.date} locale={locale} />
+      </div>
 
       <ArticleDetailClient
         article={article}

@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl';
 import type { Metadata } from 'next';
-import { AlertBanner } from '@/components/layout/AlertBanner';
+import { AlertBannerLiveWrapper } from '@/components/layout/AlertBannerLiveWrapper';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { GlassCard } from '@/components/ui/GlassCard';
@@ -20,7 +20,7 @@ export default function PricingPage() {
 
   return (
     <>
-      <AlertBanner />
+      <AlertBannerLiveWrapper />
       <Navbar />
 
       <main style={{ maxWidth: '900px', margin: '0 auto', padding: '40px 24px 60px' }}>
