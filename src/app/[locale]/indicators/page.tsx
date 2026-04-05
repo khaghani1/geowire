@@ -373,6 +373,27 @@ export default function IndicatorsPage() {
             Sign Up Free
           </a>
         </GlassCard>
+
+        {/* Cross-links */}
+        <div style={{
+          display: 'flex',
+          gap: '16px',
+          justifyContent: 'center',
+          flexWrap: 'wrap',
+          padding: '24px 0',
+          borderTop: '1px solid rgba(255,255,255,0.06)',
+          marginTop: '32px',
+        }}>
+          <a href="/en/analysis" style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: '#2979FF', textDecoration: 'none' }}>
+            📰 Read Analysis
+          </a>
+          <a href="/en/dashboard" style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: '#2979FF', textDecoration: 'none' }}>
+            📈 Interactive Dashboard
+          </a>
+          <a href="/en/about" style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: '#2979FF', textDecoration: 'none' }}>
+            🔬 Methodology
+          </a>
+        </div>
       </main>
 
       {/* JSON-LD Schema */}

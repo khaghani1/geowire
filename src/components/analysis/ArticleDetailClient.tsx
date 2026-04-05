@@ -216,6 +216,30 @@ export function ArticleDetailClient({ article, related, locale }: ArticleDetailC
           </div>
         </div>
       )}
+
+      {/* Cross-links to other sections */}
+      <div style={{
+        display: 'flex',
+        gap: '16px',
+        justifyContent: 'center',
+        flexWrap: 'wrap',
+        padding: '24px 0',
+        borderTop: '1px solid rgba(255,255,255,0.06)',
+        marginTop: '16px',
+      }}>
+        <a href="/${ locale }/indicators" style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: '#2979FF', textDecoration: 'none' }}>
+          📊 Live Indicators
+        </a>
+        <a href="/${ locale }/dashboard" style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: '#2979FF', textDecoration: 'none' }}>
+          📈 Interactive Dashboard
+        </a>
+        <a href="/${ locale }/analysis" style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: '#2979FF', textDecoration: 'none' }}>
+          📰 All Analysis
+        </a>
+        <a href="/${ locale }/commodities" style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: '#2979FF', textDecoration: 'none' }}>
+          🛢️ Commodity Explorer
+        </a>
+      </div>
     </main>
   );
 }

@@ -20,6 +20,24 @@ export default function PricingPage() {
 
   return (
     <>
+      {/* JSON-LD Product schema for pricing tiers */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebPage',
+            name: 'GeoWire Pricing',
+            description: 'Free and Pro pricing tiers for recession intelligence.',
+            url: 'https://www.geowire.org/en/pricing',
+            mainEntity: [
+              { '@type': 'Product', name: 'GeoWire Free', description: '3 recession models, 10 API calls/day', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+              { '@type': 'Product', name: 'GeoWire Pro', description: '6 recession models, real-time data, unlimited API', offers: { '@type': 'Offer', price: '49', priceCurrency: 'USD' } },
+            ],
+          }),
+        }}
+      />
+
       <AlertBannerLiveWrapper />
       <Navbar />
 

@@ -16,6 +16,21 @@ export default function AnalysisPage() {
 
   return (
     <>
+      {/* JSON-LD CollectionPage schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: 'GeoWire Analysis',
+            description: 'Deep-dive intelligence on recession risk, energy markets, and supply-chain disruptions.',
+            url: 'https://www.geowire.org/en/analysis',
+            publisher: { '@type': 'Organization', name: 'GeoWire', url: 'https://www.geowire.org' },
+          }),
+        }}
+      />
+
       <AlertBannerLiveWrapper />
       <Navbar />
 

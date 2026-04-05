@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { useTranslations } from 'next-intl';
 import { AlertBannerLiveWrapper } from '@/components/layout/AlertBannerLiveWrapper';
 import { Navbar } from '@/components/layout/Navbar';
@@ -14,6 +15,17 @@ import { ScenarioCards } from '@/components/homepage/ScenarioCards';
 import { SupplyChainMapWrapper } from '@/components/maps/SupplyChainMapWrapper';
 import { WhatChangedTodayWrapper } from '@/components/home/WhatChangedTodayWrapper';
 import { ChartErrorBoundary } from '@/components/dashboard/ChartErrorBoundary';
+
+export const metadata: Metadata = {
+  title: 'GeoWire — Real-Time Recession Intelligence Platform',
+  description: 'Track how geopolitical conflict cascades into economic risk with live Federal Reserve data, 6 calibrated recession models, and interactive supply chain analysis. Updated hourly.',
+  openGraph: {
+    title: 'GeoWire — Real-Time Recession Intelligence',
+    description: 'Live recession probability from 6 academic models. FRED data updated hourly.',
+    type: 'website',
+    url: 'https://www.geowire.org',
+  },
+};
 
 // ── Static data keys (content lives in en.json) ──────────────────────────
 
@@ -39,6 +51,22 @@ export default function HomePage() {
         background: 'var(--bg-primary)',
       }}
     >
+      {/* JSON-LD Organization schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            name: 'GeoWire',
+            url: 'https://www.geowire.org',
+            description: 'Real-time recession intelligence platform powered by Federal Reserve data and academic models.',
+            sameAs: [],
+            logo: 'https://www.geowire.org/geowire-icon.svg',
+          }),
+        }}
+      />
+
       {/* Alert Banner — live recession probability from API */}
       <AlertBannerLiveWrapper />
 
@@ -229,6 +257,59 @@ export default function HomePage() {
 
           {/* Right: Recession Factors — live from API */}
           <RecessionFactorsLiveWrapper />
+        </section>
+
+        {/* Section separator */}
+        <div style={{
+          height: '1px',
+          background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.06), transparent)',
+          margin: '24px 0 28px 0',
+        }} />
+
+        {/* Explore More — internal cross-links */}
+        <section style={{ marginBottom: '32px', textAlign: 'center' }}>
+          <h2 style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: '18px',
+            fontWeight: 600,
+            color: 'var(--text-primary)',
+            marginBottom: '16px',
+            letterSpacing: '-0.01em',
+          }}>
+            Explore GeoWire
+          </h2>
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            {[
+              { href: '/en/analysis', label: 'Analysis', desc: '11 in-depth articles' },
+              { href: '/en/indicators', label: 'Live Indicators', desc: '6 recession models' },
+              { href: '/en/dashboard', label: 'Dashboard', desc: 'Interactive charts' },
+              { href: '/en/commodities', label: 'Commodities', desc: '8 supply chains' },
+              { href: '/en/about', label: 'Methodology', desc: 'How we model risk' },
+            ].map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  padding: '16px 24px',
+                  borderRadius: '12px',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  background: 'rgba(255,255,255,0.02)',
+                  textDecoration: 'none',
+                  transition: 'all 0.2s',
+                  minWidth: '160px',
+                }}
+              >
+                <span style={{ fontFamily: 'var(--font-heading)', fontSize: '14px', fontWeight: 600, color: '#2979FF', marginBottom: '4px' }}>
+                  {link.label} →
+                </span>
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'var(--text-secondary)' }}>
+                  {link.desc}
+                </span>
+              </a>
+            ))}
+          </div>
         </section>
       </main>
 

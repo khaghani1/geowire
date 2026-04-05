@@ -45,6 +45,25 @@ export default function AboutPage() {
       <Navbar />
 
       <main style={{ maxWidth: '800px', margin: '0 auto', padding: '40px 24px 60px' }}>
+        {/* JSON-LD AboutPage schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'AboutPage',
+              name: 'About GeoWire',
+              description: 'GeoWire is a macro intelligence platform built by economists and data scientists.',
+              url: 'https://www.geowire.org/en/about',
+              mainEntity: {
+                '@type': 'Organization',
+                name: 'GeoWire',
+                description: 'Recession intelligence platform powered by Federal Reserve data and 6 calibrated academic models.',
+              },
+            }),
+          }}
+        />
+
         {/* Header */}
         <h1
           style={{
