@@ -1,6 +1,8 @@
 'use client';
 
 import { useRecessionScore } from '@/hooks/useRecessionScore';
+import { useFredSeries, buildSeriesMap } from '@/hooks/useFredSeries';
+import { latestValue } from '@/lib/data/fred';
 import { AlertBannerLiveWrapper } from '@/components/layout/AlertBannerLiveWrapper';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
@@ -315,6 +317,9 @@ export default function IndicatorsPage() {
           )}
         </div>
 
+        {/* FRED Indicators Table — all 13 series */}
+        <FredIndicatorsTable />
+
         {/* CTA */}
         <GlassCard
           accentColor="var(--accent)"
@@ -424,5 +429,141 @@ export default function IndicatorsPage() {
 
       <Footer />
     </>
+  );
+}
+
+// ─── FRED Indicators Table ───────────────────────────────────────────────────
+
+/** Human-readable metadata for each of the 13 FRED series */
+const FRED_META: Record<string, { shortName: string; format: (v: number) => string; category: string }> = {
+  DCOILWTICO:      { shortName: 'WTI Crude Oil',          format: (v) => `$${v.toFixed(2)}/bbl`,       category: 'Commodities' },
+  T10Y2Y:          { shortName: '10Y–2Y Spread',          format: (v) => `${v.toFixed(2)}%`,            category: 'Yield Curve' },
+  T10Y3M:          { shortName: '10Y–3M Spread',          format: (v) => `${v.toFixed(2)}%`,            category: 'Yield Curve' },
+  T10YFF:          { shortName: '10Y–Fed Funds',          format: (v) => `${v.toFixed(2)}%`,            category: 'Yield Curve' },
+  UNRATE:          { shortName: 'Unemployment Rate',      format: (v) => `${v.toFixed(1)}%`,            category: 'Labor Market' },
+  ICSA:            { shortName: 'Initial Jobless Claims',  format: (v) => `${(v / 1000).toFixed(0)}K`,  category: 'Labor Market' },
+  SAHMCURRENT:     { shortName: 'Sahm Rule',              format: (v) => `${v.toFixed(2)} pp`,          category: 'Labor Market' },
+  UMCSENT:         { shortName: 'Consumer Sentiment',     format: (v) => v.toFixed(1),                  category: 'Consumer' },
+  USSLIND:         { shortName: 'Philly Fed Leading',     format: (v) => `${v.toFixed(2)}%`,            category: 'Leading Index' },
+  RECPROUSM156N:   { shortName: 'Chauvet-Piger Prob.',    format: (v) => `${v.toFixed(2)}%`,            category: 'Recession Prob.' },
+  BAMLH0A0HYM2:   { shortName: 'HY Credit Spread',       format: (v) => `${v.toFixed(2)}%`,            category: 'Credit' },
+  CPIAUCSL:        { shortName: 'CPI (All Items)',         format: (v) => v.toFixed(1),                  category: 'Inflation' },
+  GDPC1:           { shortName: 'Real GDP',                format: (v) => `$${(v / 1000).toFixed(1)}T`, category: 'Output' },
+};
+
+function FredIndicatorsTable() {
+  const fredResults = useFredSeries();
+  const seriesMap = buildSeriesMap(fredResults);
+  const anyLoading = fredResults.some((r) => r.isLoading);
+
+  const rows = Object.entries(FRED_META).map(([id, meta]) => {
+    const result = seriesMap[id];
+    const val = result ? latestValue(result) : null;
+    const lastDate = result?.observations?.filter((o) => o.value !== null).slice(-1)[0]?.date;
+    return { id, ...meta, value: val, frequency: result?.frequency ?? '—', lastDate };
+  });
+
+  return (
+    <div style={{ marginBottom: '40px' }}>
+      <h2
+        style={{
+          fontSize: '20px',
+          fontWeight: 700,
+          color: 'var(--text-primary)',
+          fontFamily: 'var(--font-heading)',
+          marginBottom: '6px',
+        }}
+      >
+        Federal Reserve Indicators
+      </h2>
+      <p
+        style={{
+          fontSize: '13px',
+          color: 'rgba(255,255,255,0.5)',
+          fontFamily: 'var(--font-body)',
+          marginBottom: '16px',
+        }}
+      >
+        All 13 FRED series powering GeoWire&apos;s recession models — updated live from the St. Louis Federal Reserve.
+      </p>
+
+      {anyLoading ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {Array(13).fill(null).map((_, i) => <SkeletonCard key={i} />)}
+        </div>
+      ) : (
+        <div style={{ overflowX: 'auto' }}>
+          <table
+            style={{
+              width: '100%',
+              borderCollapse: 'collapse',
+              fontFamily: 'var(--font-body)',
+              fontSize: '13px',
+            }}
+          >
+            <thead>
+              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
+                {['Indicator', 'Category', 'Latest Value', 'Frequency', 'As Of'].map((h) => (
+                  <th
+                    key={h}
+                    style={{
+                      textAlign: 'left',
+                      padding: '10px 12px',
+                      fontSize: '11px',
+                      fontWeight: 600,
+                      color: 'rgba(255,255,255,0.45)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.5px',
+                    }}
+                  >
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row) => (
+                <tr
+                  key={row.id}
+                  style={{
+                    borderBottom: '1px solid rgba(255,255,255,0.06)',
+                    transition: 'background 0.15s',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+                >
+                  <td style={{ padding: '10px 12px', color: 'var(--text-primary)', fontWeight: 500 }}>
+                    {row.shortName}
+                    <span style={{ display: 'block', fontSize: '10px', color: 'rgba(255,255,255,0.35)', fontFamily: 'var(--font-data)' }}>
+                      {row.id}
+                    </span>
+                  </td>
+                  <td style={{ padding: '10px 12px', color: 'rgba(255,255,255,0.6)' }}>
+                    {row.category}
+                  </td>
+                  <td
+                    style={{
+                      padding: '10px 12px',
+                      fontFamily: 'var(--font-data)',
+                      fontVariantNumeric: 'tabular-nums',
+                      fontWeight: 600,
+                      color: 'var(--text-primary)',
+                    }}
+                  >
+                    {row.value !== null ? row.format(row.value) : '—'}
+                  </td>
+                  <td style={{ padding: '10px 12px', color: 'rgba(255,255,255,0.5)' }}>
+                    {row.frequency}
+                  </td>
+                  <td style={{ padding: '10px 12px', color: 'rgba(255,255,255,0.4)', fontFamily: 'var(--font-data)', fontSize: '12px' }}>
+                    {row.lastDate ?? '—'}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
   );
 }

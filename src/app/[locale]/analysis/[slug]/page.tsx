@@ -66,6 +66,35 @@ export default async function ArticleDetailPage({ params }: PageProps) {
     mainEntityOfPage: `https://geowire.org/${locale}/analysis/${slug}`,
   };
 
+  // FAQPage JSON-LD — extract Q&A pairs from FAQ sections
+  const faqSection = article.sections?.find((s) => s.id === 'faq-section');
+  let faqJsonLd: object | null = null;
+  if (faqSection) {
+    const qaPairs = faqSection.body
+      .split(/\nQ:\s*/)
+      .filter(Boolean)
+      .map((block) => {
+        const [question, ...answerParts] = block.split(/\nA:\s*/);
+        const answer = answerParts.join('\nA: ').trim();
+        return question && answer
+          ? {
+              '@type': 'Question',
+              name: question.trim(),
+              acceptedAnswer: { '@type': 'Answer', text: answer },
+            }
+          : null;
+      })
+      .filter(Boolean);
+
+    if (qaPairs.length > 0) {
+      faqJsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: qaPairs,
+      };
+    }
+  }
+
   return (
     <>
       <AlertBannerLiveWrapper />
@@ -76,6 +105,12 @@ export default async function ArticleDetailPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
 
       {/* Data disclaimer — between header and article body */}
       <div style={{ maxWidth: '1120px', margin: '0 auto', padding: '24px 24px 0' }}>
